@@ -1,6 +1,7 @@
 package co.leantechniques.maven.buildtime;
 
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
 
 public class MojoTimer {
 
@@ -35,6 +36,11 @@ public class MojoTimer {
     }
 
     public void write(Logger logger) {
-        logger.info(String.format("  %s [%s]",getName(), getDuration()));
+        // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
+        logger.info(String.format("  %s %s [%.3fs]", getName(), StringUtils.repeat(".", calculateLineLength()), (double)getDuration()/1000));
+    }
+
+    private int calculateLineLength() {
+        return 57 - name.length();
     }
 }

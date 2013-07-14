@@ -30,6 +30,7 @@ public class SessionTimer {
     }
 
     public void write(Logger logger) {
+
         logger.info("Build Time Summary:");
         logger.info("");
         for(String projectName : projects.keySet()) {

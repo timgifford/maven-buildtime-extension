@@ -57,8 +57,8 @@ public class SessionTimerTest {
         assertEquals("Build Time Summary:" + newLine +
                      newLine +
                      "one" + newLine +
-                     "  artifactId:goal1 [1]" + newLine +
-                     "  artifactId:goal2 [2]" + newLine +
+                     "  artifactId:goal1 ......................................... [0.001s]" + newLine +
+                     "  artifactId:goal2 ......................................... [0.002s]" + newLine +
                      dividerLine
 
                 , fakeLogger.output());
