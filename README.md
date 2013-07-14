@@ -1,3 +1,6 @@
+Put this in your pom.xml to find out why you are slow.
+
+```
 <build>
     <extensions>
         <extension>
@@ -7,4 +10,4 @@
         </extension>
     </extensions>
 </build>
-
+```
