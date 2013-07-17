@@ -49,13 +49,6 @@
                 </executions>
             </plugin>
         </plugins>
-        <extensions>
-            <extension>
-                <groupId>co.leantechniques.maven</groupId>
-                <artifactId>maven-buildtime-extension</artifactId>
-                <version>${project.version}</version>
-            </extension>
-        </extensions>
     </build>
 
 
