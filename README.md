@@ -17,7 +17,26 @@ Put this in your pom.xml to find out why you are slow.
 </build>
 ```
 
-# Example
+## StatsD Integration
+Timing data can be sent to [StatsD](https://github.com/etsy/statsd/) if the following properties are defined in 
+the top-level project's pom:
+
+- **buildtime.statsd.host**:    (required) the host to send metrics to
+- buildtime.statsd.port:    optional port for statsd (default is 8125)
+- buildtime.statsd.prefix:  optional prefix to include in StatsD metrics (default is "buildtime")
+
+Example Property Defininition:
+```
+<properties>
+	<!-- Required to send stats -->
+	<buildtime.statsd.host>mystatsd</buildtime.statsd.host>
+	
+	<!-- Optional prefix -->
+	<buildtime.statsd.prefix>myproject.build</buildtime.statsd.prefix>
+</properties>
+```	
+
+# Example Output
 
 ```
 [INFO] Reactor Summary:
