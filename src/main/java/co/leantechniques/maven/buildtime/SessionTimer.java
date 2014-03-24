@@ -1,8 +1,11 @@
 package co.leantechniques.maven.buildtime;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import com.timgroup.statsd.NoOpStatsDClient;
 import com.timgroup.statsd.StatsDClient;

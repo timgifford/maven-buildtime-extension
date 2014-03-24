@@ -1,13 +1,12 @@
 package co.leantechniques.maven.buildtime;
 
-import org.codehaus.plexus.logging.AbstractLogger;
-import org.codehaus.plexus.logging.Logger;
+import org.apache.maven.cli.logging.Slf4jStdoutLogger;
 import org.codehaus.plexus.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FakeLogger extends AbstractLogger {
+public class FakeLogger extends Slf4jStdoutLogger {
     private final List<String> list;
 
     public FakeLogger(){
@@ -15,38 +14,31 @@ public class FakeLogger extends AbstractLogger {
     }
 
     public FakeLogger(int threshold, String name) {
-        super(threshold, name);
         this.list = new ArrayList<String>();
     }
 
     @Override
-    public void debug(String s, Throwable throwable) {
+    public void debug(String s) {
         list.add(s);
+        super.debug(s);
     }
 
     @Override
-    public void info(String s, Throwable throwable) {
+    public void info(String s) {
         list.add(s);
+        super.info(s);
     }
 
     @Override
-    public void warn(String s, Throwable throwable) {
+    public void warn(String s) {
         list.add(s);
+        super.warn(s);
     }
 
     @Override
-    public void error(String s, Throwable throwable) {
+    public void error(String s) {
         list.add(s);
-    }
-
-    @Override
-    public void fatalError(String s, Throwable throwable) {
-        list.add(s);
-    }
-
-    @Override
-    public Logger getChildLogger(String s) {
-        return null;
+        super.error(s);
     }
 
     public String getLine(int i) {

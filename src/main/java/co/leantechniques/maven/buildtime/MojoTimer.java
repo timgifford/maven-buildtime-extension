@@ -1,7 +1,7 @@
 package co.leantechniques.maven.buildtime;
 
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
+import org.slf4j.Logger;
 
 public class MojoTimer {
 

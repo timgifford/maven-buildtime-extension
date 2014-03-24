@@ -8,7 +8,7 @@ import org.apache.maven.cli.ExecutionTimingExecutionListener;
 import org.apache.maven.execution.MavenSession;
 import org.codehaus.plexus.component.annotations.Component;
 import org.codehaus.plexus.component.annotations.Requirement;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
@@ -32,5 +32,28 @@ public class BuildTimeMavenLifecycleParticipant extends AbstractMavenLifecyclePa
 
     void afterProjectsRead(MavenSession session, ExecutionTimingExecutionListener listener) {
         listener.registerListenerOn(session);
+    }
+    
+    @Override
+    public void afterSessionEnd(MavenSession session) throws MavenExecutionException {
+    	if(stats != null) {
+    		stats.stop();
+    	}
+    	super.afterSessionEnd(session);
+    }
+    
+    private StatsDClient getStats(Properties props) {
+    	String host = props.getProperty(STATSD_HOST_PROPERTY);
+    	String port = props.getProperty(STATSD_PORT_PROPERTY);
+    	String prefix = props.getProperty(STATSD_PREFIX);
+    	
+    	if(host != null) {
+	        return new NonBlockingStatsDClient(
+	        		prefix == null ? "buildtime" : prefix, 
+	        		host, 
+	        		port == null ? 8125 : Integer.valueOf(port));
+    	}
+    	
+    	return null;
     }
 }

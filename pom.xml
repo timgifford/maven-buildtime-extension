@@ -2,13 +2,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.leantechniques</groupId>
     <artifactId>maven-buildtime-extension</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
 
     <name>Maven Buildtime Extension</name>
@@ -51,12 +51,12 @@
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
-            <version>3.0</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-embedder</artifactId>
-            <version>3.0</version>
+            <version>3.2.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
