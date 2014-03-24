@@ -57,8 +57,8 @@ public class SessionTimer {
     public void mojoStarted(ExecutionEvent event) {
         getProject(event.getProject()).startTimerFor(new MojoExecutionName(event.getMojoExecution()));
     }
-
-    public void mojoSucceeded(ExecutionEvent event) {
-        getProject(event.getProject()).stopTimerFor(new MojoExecutionName(event.getMojoExecution()));
+    
+    public void mojoFinished(ExecutionEvent event) {
+    	getProject(event.getProject()).stopTimerFor(new MojoExecutionName(event.getMojoExecution()));
     }
 }

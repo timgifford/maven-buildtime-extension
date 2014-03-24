@@ -43,8 +43,14 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
 	@Override
 	public void mojoSucceeded(final ExecutionEvent event) {
         super.mojoSucceeded(event);
-        session.mojoSucceeded(event);
+        session.mojoFinished(event);
     }
+	
+	@Override
+	public void mojoFailed(ExecutionEvent event) {
+		super.mojoFailed(event);
+		session.mojoFinished(event);
+	}
 
     @Override
     public void sessionEnded(ExecutionEvent event) {
