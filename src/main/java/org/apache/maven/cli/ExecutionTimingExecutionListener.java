@@ -23,17 +23,13 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
     private final StatsDClient stats;
    
 	public ExecutionTimingExecutionListener(final Logger logger) {
-		super(logger);
-		this.logger = logger;
-		stats = new NoOpStatsDClient();
-		
-		session = new SessionTimer(stats);
+		this(null, logger);
 	}
 	
 	public ExecutionTimingExecutionListener(final StatsDClient stats, final Logger logger) {
 		super(logger);
 		this.logger = logger;	
-		this.stats = stats;
+		this.stats = stats == null ? new NoOpStatsDClient() : stats;
 		
 		session = new SessionTimer(stats);
 	}	
