@@ -6,13 +6,15 @@ import java.util.LinkedHashMap;
 public class ProjectTimer {
 
     private LinkedHashMap<String, MojoTimer> dataStore = new LinkedHashMap<String, MojoTimer>();
+    private SystemClock systemClock;
 
-    public ProjectTimer() {
-        this(new LinkedHashMap<String, MojoTimer>());
+    public ProjectTimer(LinkedHashMap<String, MojoTimer> dataStore, SystemClock systemClock) {
+        this.dataStore = dataStore;
+        this.systemClock = systemClock;
     }
 
-    public ProjectTimer(LinkedHashMap<String, MojoTimer> dataStore) {
-        this.dataStore = dataStore;
+    public ProjectTimer(SystemClock systemClock) {
+        this(new LinkedHashMap<String, MojoTimer>(), systemClock);
     }
 
     public void write(Logger logger) {
@@ -29,9 +31,9 @@ public class ProjectTimer {
         getMojoTimer(name).start();
     }
 
-    private MojoTimer getMojoTimer(MojoExecutionName name) {
+    public MojoTimer getMojoTimer(MojoExecutionName name) {
         if(!dataStore.containsKey(name.getName()))
-            dataStore.put(name.getName(), new MojoTimer(name.getName()));
+            dataStore.put(name.getName(), new MojoTimer(name.getName(),systemClock));
         return dataStore.get(name.getName());
     }
 }

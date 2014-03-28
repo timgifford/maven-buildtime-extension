@@ -8,15 +8,21 @@ public class MojoTimer {
     private String name;
     private long startTime = 0;
     private long endTime = 0;
+    private SystemClock systemClock;
 
-    public MojoTimer(String name) {
-        this(name, 0,0);
+    public MojoTimer(String name, SystemClock systemClock) {
+        this(name, 0,0, systemClock);
     }
 
-    public MojoTimer(String name, long startTime, long endTime) {
+    public MojoTimer(String name, long startTime, long endTime){
+        this(name, startTime, endTime, new SystemClock());
+    }
+
+    public MojoTimer(String name, long startTime, long endTime, SystemClock systemClock) {
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.systemClock = systemClock;
     }
 
     public Long getDuration() {
@@ -28,11 +34,11 @@ public class MojoTimer {
     }
 
     public void stop() {
-        this.endTime = System.currentTimeMillis();
+        this.endTime = systemClock.currentTimeMillis();
     }
 
     public void start() {
-        this.startTime = System.currentTimeMillis();
+        this.startTime = systemClock.currentTimeMillis();
     }
 
     public void write(Logger logger) {

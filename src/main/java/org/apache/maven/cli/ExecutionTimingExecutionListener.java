@@ -18,13 +18,19 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
 	@Override
 	public void mojoStarted(final ExecutionEvent event) {
 		super.mojoStarted(event);
-        session.mojoStarted(event);
+        session.mojoStarted(event.getProject(), event.getMojoExecution());
     }
 
-	@Override
+    @Override
+    public void mojoFailed(ExecutionEvent event) {
+        super.mojoFailed(event);
+        session.mojoFailed(event.getProject(), event.getMojoExecution());
+    }
+
+    @Override
 	public void mojoSucceeded(final ExecutionEvent event) {
         super.mojoSucceeded(event);
-        session.mojoSucceeded(event);
+        session.mojoSucceeded(event.getProject(), event.getMojoExecution());
     }
 
     @Override

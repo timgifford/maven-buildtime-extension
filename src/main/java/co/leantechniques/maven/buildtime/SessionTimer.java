@@ -1,6 +1,6 @@
 package co.leantechniques.maven.buildtime;
 
-import org.apache.maven.execution.ExecutionEvent;
+import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.logging.Logger;
 
@@ -11,21 +11,23 @@ public class SessionTimer {
 
     static final String DIVIDER = "------------------------------------------------------------------------";
     private Map<String, ProjectTimer> projects;
+    private SystemClock systemClock;
 
     public SessionTimer() {
-        this(new LinkedHashMap<String, ProjectTimer>());
+        this(new LinkedHashMap<String, ProjectTimer>(), new SystemClock());
     }
 
-    public SessionTimer(Map<String, ProjectTimer> projects) {
+    public SessionTimer(Map<String, ProjectTimer> projects, SystemClock systemClock) {
         this.projects = projects;
+        this.systemClock = systemClock;
     }
 
-    private ProjectTimer getProject(MavenProject project) {
+    public ProjectTimer getProject(MavenProject project) {
         return getProject(project.getArtifactId());
     }
 
     public ProjectTimer getProject(String projectArtifactId) {
-        if(!projects.containsKey(projectArtifactId)) projects.put(projectArtifactId, new ProjectTimer());
+        if(!projects.containsKey(projectArtifactId)) projects.put(projectArtifactId, new ProjectTimer(systemClock));
         return projects.get(projectArtifactId);
     }
 
@@ -41,11 +43,19 @@ public class SessionTimer {
         logger.info(DIVIDER);
     }
 
-    public void mojoStarted(ExecutionEvent event) {
-        getProject(event.getProject()).startTimerFor(new MojoExecutionName(event.getMojoExecution()));
+    public void mojoStarted(MavenProject project, MojoExecution mojoExecution) {
+        getProject(project).startTimerFor(new MojoExecutionName(mojoExecution));
     }
 
-    public void mojoSucceeded(ExecutionEvent event) {
-        getProject(event.getProject()).stopTimerFor(new MojoExecutionName(event.getMojoExecution()));
+    public void mojoSucceeded(MavenProject project, MojoExecution mojoExecution) {
+        getProject(project).stopTimerFor(new MojoExecutionName(mojoExecution));
+    }
+
+    public void mojoFailed(MavenProject project, MojoExecution mojoExecution) {
+        getProject(project).stopTimerFor(new MojoExecutionName(mojoExecution));
+    }
+
+    public MojoTimer getMojoTimer(MavenProject project, MojoExecution mojoExecution) {
+        return getProject(project).getMojoTimer(new MojoExecutionName(mojoExecution));
     }
 }

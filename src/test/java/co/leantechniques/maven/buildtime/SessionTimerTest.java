@@ -1,5 +1,8 @@
 package co.leantechniques.maven.buildtime;
 
+import org.apache.maven.model.Plugin;
+import org.apache.maven.plugin.MojoExecution;
+import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -7,6 +10,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static junit.framework.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class SessionTimerTest {
 
@@ -14,13 +19,25 @@ public class SessionTimerTest {
     private SessionTimer sessionTimer;
     private ProjectTimer oneProject;
     private LinkedHashMap<String, MojoTimer> mojoTiming;
+    private FakeLogger fakeLogger;
+    private MojoExecution mojoExecution;
+    private MavenProject project;
 
     @Before
     public void setUp() throws Exception {
+        fakeLogger = new FakeLogger();
         existingProjects = new HashMap<String, ProjectTimer>();
-        sessionTimer = new SessionTimer(existingProjects);
+        SystemClock mockClock = mock(SystemClock.class);
+        when(mockClock.currentTimeMillis())
+                .thenReturn(100L)
+                .thenReturn(200L);
+
+        sessionTimer = new SessionTimer(existingProjects, mockClock);
+
         mojoTiming = new LinkedHashMap<String, MojoTimer>();
-        oneProject = new ProjectTimer(mojoTiming);
+        oneProject = new ProjectTimer(mojoTiming, mockClock);
+        mojoExecution = createMojoExecution();
+        project = createMavenProject();
     }
 
     @Test
@@ -48,7 +65,6 @@ public class SessionTimerTest {
 
         existingProjects.put("one", oneProject);
 
-        FakeLogger fakeLogger = new FakeLogger();
         sessionTimer.write(fakeLogger);
 
         String newLine = "\n";
@@ -62,6 +78,38 @@ public class SessionTimerTest {
                      dividerLine
 
                 , fakeLogger.output());
+    }
+
+    @Test
+    public void successfulMojoShouldStopTimer(){
+        sessionTimer.mojoStarted(project, mojoExecution);
+        sessionTimer.mojoSucceeded(project, mojoExecution);
+
+        MojoTimer mojoTimer = sessionTimer.getMojoTimer(project, mojoExecution);
+
+        assertEquals(new Long(100), mojoTimer.getDuration());
+    }
+
+    @Test
+    public void failureMojoShouldStopTimer(){
+        sessionTimer.mojoStarted(project, mojoExecution);
+        sessionTimer.mojoFailed(project, mojoExecution);
+
+        MojoTimer mojoTimer = sessionTimer.getMojoTimer(project, mojoExecution);
+
+        assertEquals(new Long(100), mojoTimer.getDuration());
+    }
+
+    private MojoExecution createMojoExecution() {
+        Plugin plugin = new Plugin();
+        plugin.setArtifactId("plugin");
+        return new MojoExecution(plugin, "goal", "executionId");
+    }
+
+    private MavenProject createMavenProject() {
+        MavenProject project = new MavenProject();
+        project.setArtifactId("maven-project-artifact");
+        return project;
     }
 
 
