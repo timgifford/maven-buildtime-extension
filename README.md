@@ -11,7 +11,7 @@ Put this in your pom.xml to find out why you are slow.
         <extension>
             <groupId>co.leantechniques</groupId>
             <artifactId>maven-buildtime-extension</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </extension>
     </extensions>
 </build>
