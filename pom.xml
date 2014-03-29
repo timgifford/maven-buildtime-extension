@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.leantechniques</groupId>
     <artifactId>maven-buildtime-extension</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -30,7 +30,7 @@
     </licenses>
     <scm>
         <url>https://github.com/timgifford/maven-buildtime-extension</url>
-        <connection>scm:git:git://github.com/timgifford/maven-buildtime-extension.git</connection>
+        <connection>scm:git:git@github.com:timgifford/maven-buildtime-extension.git</connection>
         <developerConnection>scm:git:git@github.com:timgifford/maven-buildtime-extension.git</developerConnection>
     </scm>
 
