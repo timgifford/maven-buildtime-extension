@@ -2,7 +2,7 @@ package co.leantechniques.maven.buildtime;
 
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

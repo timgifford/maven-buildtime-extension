@@ -1,18 +1,17 @@
 package co.leantechniques.maven.buildtime;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verify;
 
+@RunWith(MockitoJUnitRunner.class)
 public class MojoTimerTest {
-
-    private FakeLogger logger;
-
-    @Before
-    public void setUp() throws Exception {
-        logger = new FakeLogger();
-    }
+    @Mock
+    private Logger logger;
 
     @Test
     public void outputWithSubsecond() {
@@ -20,19 +19,18 @@ public class MojoTimerTest {
 
                     //coefficient-core .................................. SUCCESS [0.846s]
                     //coefficient-core .................................. SUCCESS [100.846s]
-        assertEquals("  1234567890 ............................................... [0.100s]", logger.output());
+        verify(logger).info("  1234567890 ............................................... [0.100s]");
     }
 
     @Test
     public void outputWith100Seconds() {
         new MojoTimer("1234567890", 0,100100).write(logger);
-
-        assertEquals("  1234567890 ............................................... [100.100s]", logger.output());
+        verify(logger).info("  1234567890 ............................................... [100.100s]");
     }
 
     @Test
     public void outputWithLongPluginName() {
         new MojoTimer("Some really long project name", 0,100100).write(logger);
-        assertEquals("  Some really long project name ............................ [100.100s]", logger.output());
+        verify(logger).info("  Some really long project name ............................ [100.100s]");
     }
 }
