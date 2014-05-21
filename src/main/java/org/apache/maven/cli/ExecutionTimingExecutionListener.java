@@ -1,9 +1,10 @@
 package org.apache.maven.cli;
 
 import co.leantechniques.maven.buildtime.SessionTimer;
+import org.apache.maven.cli.event.ExecutionEventLogger;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
-import org.codehaus.plexus.logging.Logger;
+import org.slf4j.Logger;
 
 public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
 

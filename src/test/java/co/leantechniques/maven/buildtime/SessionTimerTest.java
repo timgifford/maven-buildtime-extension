@@ -5,27 +5,31 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.slf4j.Logger;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import static junit.framework.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SessionTimerTest {
 
     private HashMap<String,ProjectTimer> existingProjects;
     private SessionTimer sessionTimer;
     private ProjectTimer oneProject;
     private LinkedHashMap<String, MojoTimer> mojoTiming;
-    private FakeLogger fakeLogger;
+    @Mock
+    private Logger logger;
     private MojoExecution mojoExecution;
     private MavenProject project;
 
     @Before
     public void setUp() throws Exception {
-        fakeLogger = new FakeLogger();
         existingProjects = new HashMap<String, ProjectTimer>();
         SystemClock mockClock = mock(SystemClock.class);
         when(mockClock.currentTimeMillis())
@@ -65,19 +69,15 @@ public class SessionTimerTest {
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.write(fakeLogger);
-
-        String newLine = "\n";
+        sessionTimer.write(logger);
 
         String dividerLine = SessionTimer.DIVIDER;
-        assertEquals("Build Time Summary:" + newLine +
-                     newLine +
-                     "one" + newLine +
-                     "  artifactId:goal1 ......................................... [0.001s]" + newLine +
-                     "  artifactId:goal2 ......................................... [0.002s]" + newLine +
-                     dividerLine
-
-                , fakeLogger.output());
+        verify(logger).info("Build Time Summary:");
+        verify(logger).info("");
+        verify(logger).info("one");
+        verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
+        verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
+        verify(logger).info(dividerLine);
     }
 
     @Test
@@ -111,6 +111,5 @@ public class SessionTimerTest {
         project.setArtifactId("maven-project-artifact");
         return project;
     }
-
 
 }
