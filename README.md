@@ -6,7 +6,7 @@ displays the duration for each goal that is ran during your build.
 Put this in your pom.xml to find out why you are slow.
 
 Maven introduced slf4j in version 3.2 which broke this build extension for Maven 3.0 users. 
-Version 2.0+ will work with the latest version of Maven and 
+Version 2.0+ will work with the latest version of Maven.
 
 ## Maven 3.2 - Use version 2.0+
 
@@ -23,7 +23,7 @@ Version 2.0+ will work with the latest version of Maven and
 </build>
 ```
 
-## Maven 3.0 - Use version 1.0.1 ```Deprecated```
+## Maven 3.0 - Use version 1.0 ```Deprecated```
 Version 1 works with Maven 3.0. All future improvements and bug fixes will occur on the 2.0 version 
 of this build extension
 
@@ -33,7 +33,7 @@ of this build extension
         <extension>
             <groupId>co.leantechniques</groupId>
             <artifactId>maven-buildtime-extension</artifactId>
-            <version>1.0.1</version>
+            <version>1.0</version>
         </extension>
     </extensions>
 </build>
@@ -89,3 +89,15 @@ of this build extension
 [INFO]   maven-compiler-plugin:compile ............................ [0.002s]
 [INFO] ------------------------------------------------------------------------
 ```
+
+# Release Process
+```
+mvn release:prepare
+
+mvn release:perform
+```
+
+Follow the directions here: http://central.sonatype.org/pages/releasing-the-deployment.html
+Find the staging repository 'comleantechniques-xxxx'
+Click ```Close``` to promote to release
+Click ```Release``` to publish to Release repository
