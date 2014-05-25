@@ -5,6 +5,28 @@ displays the duration for each goal that is ran during your build.
 # Usage
 Put this in your pom.xml to find out why you are slow.
 
+Maven introduced slf4j in version 3.2 which broke this build extension for Maven 3.0 users. 
+Version 2.0+ will work with the latest version of Maven and 
+
+## Maven 3.2 - Use version 2.0+
+
+
+```
+<build>
+    <extensions>
+        <extension>
+            <groupId>co.leantechniques</groupId>
+            <artifactId>maven-buildtime-extension</artifactId>
+            <version>2.0</version>
+        </extension>
+    </extensions>
+</build>
+```
+
+## Maven 3.0 - Use version 1.0.1 ```Deprecated```
+Version 1 works with Maven 3.0. All future improvements and bug fixes will occur on the 2.0 version 
+of this build extension
+
 ```
 <build>
     <extensions>
