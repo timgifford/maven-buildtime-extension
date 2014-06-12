@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 
 public class MojoTimer {
 
+    public static final int MAX_NAME_LENGTH = 58;
     private String name;
     private long startTime = 0;
     private long endTime = 0;
@@ -43,10 +44,11 @@ public class MojoTimer {
 
     public void write(Logger logger) {
         // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
-        logger.info(String.format("  %s %s [%.3fs]", getName(), StringUtils.repeat(".", calculateLineLength()), (double)getDuration()/1000));
+        logger.info(String.format("  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
     }
 
-    private int calculateLineLength() {
-        return 57 - name.length();
+    private String getDisplayName() {
+        String truncatedName = name.length() >= MAX_NAME_LENGTH ? StringUtils.substring(name, 0, MAX_NAME_LENGTH) : name + " ";
+        return StringUtils.rightPad(truncatedName, MAX_NAME_LENGTH, ".");
     }
 }
