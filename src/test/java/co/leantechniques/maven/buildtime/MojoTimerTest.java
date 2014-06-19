@@ -33,4 +33,16 @@ public class MojoTimerTest {
         new MojoTimer("Some really long project name", 0,100100).write(logger);
         verify(logger).info("  Some really long project name ............................ [100.100s]");
     }
+
+    @Test
+    public void outputWithNameAtTheMaxLength() {
+        new MojoTimer("Some really,  really,  really,  really,  long project name", 0,100100).write(logger);
+        verify(logger).info("  Some really,  really,  really,  really,  long project name [100.100s]");
+    }
+
+    @Test
+    public void outputWithNameOverTheMaxLength() {
+        new MojoTimer("Some really,  really,  really,  really,  really,  long project name", 0,100100).write(logger);
+        verify(logger).info("  Some really,  really,  really,  really,  really,  long pro [100.100s]");
+    }
 }
