@@ -33,7 +33,7 @@ of this build extension
         <extension>
             <groupId>co.leantechniques</groupId>
             <artifactId>maven-buildtime-extension</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
         </extension>
     </extensions>
 </build>
