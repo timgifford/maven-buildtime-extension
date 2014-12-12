@@ -17,7 +17,7 @@ Version 2.0+ will work with the latest version of Maven.
         <extension>
             <groupId>co.leantechniques</groupId>
             <artifactId>maven-buildtime-extension</artifactId>
-            <version>2.0</version>
+            <version>2.0.1</version>
         </extension>
     </extensions>
 </build>
