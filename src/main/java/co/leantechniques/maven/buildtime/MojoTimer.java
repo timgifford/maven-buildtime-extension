@@ -1,5 +1,8 @@
 package co.leantechniques.maven.buildtime;
 
+import java.io.PrintWriter;
+import java.util.Locale;
+
 import org.codehaus.plexus.util.StringUtils;
 import org.slf4j.Logger;
 
@@ -44,11 +47,15 @@ public class MojoTimer {
 
     public void write(Logger logger) {
         // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
-        logger.info(String.format("  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
+        logger.info(String.format(Locale.ENGLISH, "  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
     }
 
     private String getDisplayName() {
         String truncatedName = name.length() >= MAX_NAME_LENGTH ? StringUtils.substring(name, 0, MAX_NAME_LENGTH) : name + " ";
         return StringUtils.rightPad(truncatedName, MAX_NAME_LENGTH, ".");
+    }
+
+    public void write(PrintWriter printWriter, String projectName) {
+        printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\"%n", projectName, name, (double)getDuration()/1000);
     }
 }

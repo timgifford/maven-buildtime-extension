@@ -1,5 +1,6 @@
 package co.leantechniques.maven.buildtime;
 
+import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -57,5 +58,13 @@ public class SessionTimer {
 
     public MojoTimer getMojoTimer(MavenProject project, MojoExecution mojoExecution) {
         return getProject(project).getMojoTimer(new MojoExecutionName(mojoExecution));
+    }
+
+    public void writeTo(PrintWriter printWriter) {
+        for(String projectName : projects.keySet()) {
+
+            ProjectTimer projectTimer = projects.get(projectName);
+            projectTimer.writeTo(printWriter, projectName);
+        }
     }
 }
