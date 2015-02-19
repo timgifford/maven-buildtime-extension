@@ -1,20 +1,22 @@
 package co.leantechniques.maven.buildtime;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.slf4j.Logger;
-import java.util.LinkedHashMap;
 
 public class ProjectTimer {
 
-    private LinkedHashMap<String, MojoTimer> dataStore = new LinkedHashMap<String, MojoTimer>();
+    private Map<String, MojoTimer> dataStore = new ConcurrentHashMap<String, MojoTimer>();
     private SystemClock systemClock;
 
-    public ProjectTimer(LinkedHashMap<String, MojoTimer> dataStore, SystemClock systemClock) {
+    public ProjectTimer(Map<String, MojoTimer> dataStore, SystemClock systemClock) {
         this.dataStore = dataStore;
         this.systemClock = systemClock;
     }
 
     public ProjectTimer(SystemClock systemClock) {
-        this(new LinkedHashMap<String, MojoTimer>(), systemClock);
+        this(new ConcurrentHashMap<String, MojoTimer>(), systemClock);
     }
 
     public void write(Logger logger) {
