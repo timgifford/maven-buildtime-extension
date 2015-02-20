@@ -1,11 +1,11 @@
 package co.leantechniques.maven.buildtime;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.slf4j.Logger;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class SessionTimer {
 
@@ -14,7 +14,7 @@ public class SessionTimer {
     private SystemClock systemClock;
 
     public SessionTimer() {
-        this(new LinkedHashMap<String, ProjectTimer>(), new SystemClock());
+        this(new ConcurrentHashMap<String, ProjectTimer>(), new SystemClock());
     }
 
     public SessionTimer(Map<String, ProjectTimer> projects, SystemClock systemClock) {
