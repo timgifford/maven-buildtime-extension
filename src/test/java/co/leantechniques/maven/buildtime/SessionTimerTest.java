@@ -1,20 +1,27 @@
 package co.leantechniques.maven.buildtime;
 
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertNotNull;
+import static junit.framework.Assert.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-
-import static junit.framework.Assert.*;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimerTest {
@@ -27,6 +34,9 @@ public class SessionTimerTest {
     private Logger logger;
     private MojoExecution mojoExecution;
     private MavenProject project;
+    private PrintWriter printWriter;
+
+    private ByteArrayOutputStream outputStream;
 
     @Before
     public void setUp() throws Exception {
@@ -42,6 +52,8 @@ public class SessionTimerTest {
         oneProject = new ProjectTimer(mojoTiming, mockClock);
         mojoExecution = createMojoExecution();
         project = createMavenProject();
+        outputStream = new ByteArrayOutputStream();
+        printWriter = new PrintWriter(outputStream);
     }
 
     @Test
@@ -78,6 +90,25 @@ public class SessionTimerTest {
         verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
         verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
         verify(logger).info(dividerLine);
+    }
+
+    @Test
+    public void writeToOneProjectWithOnePlugin() {
+        MojoTimer goal1Timer = new MojoTimer("artifactId:goal1", 1, 2);
+        MojoTimer goal2Timer = new MojoTimer("artifactId:goal2", 1, 3);
+        mojoTiming.put(goal1Timer.getName(), goal1Timer);
+        mojoTiming.put(goal2Timer.getName(), goal2Timer);
+
+        existingProjects.put("one", oneProject);
+
+        sessionTimer.writeTo(printWriter);
+
+        printWriter.flush();
+        String output = outputStream.toString();
+        String[] split = output.split("\r?\n");
+
+        Assert.assertEquals(split[0], "\"one\";\"artifactId:goal1\";\"0.001\"");
+        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal2\";\"0.002\"");
     }
 
     @Test
