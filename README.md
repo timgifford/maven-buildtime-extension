@@ -5,6 +5,13 @@ displays the duration for each goal that is ran during your build.
 # Usage
 Put this in your pom.xml to find out why you are slow.
 
+## Capture the results to a CSV file
+Thanks to [@leonard84](ttps://github.com/leonard84) for the contribution. You'll need to set a property to enable this feature. Eventually, we can enhance this funcationality to include other output formats. I personally would like to publish the results to an InfluxDb instance.
+
+```
+mvn compile -Dbuildtime.output.csv=true -Dbuildtime.output.csv.file=classes\out.csv
+```
+
 Maven introduced slf4j in version 3.2 which broke this build extension for Maven 3.0 users. 
 Version 2.0+ will work with the latest version of Maven.
 
