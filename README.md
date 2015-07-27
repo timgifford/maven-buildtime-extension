@@ -46,6 +46,18 @@ of this build extension
 </build>
 ```
 
+## One-off execution
+
+Instead of modifying the POM you can also perform a one-off execution. In this
+case you must manually download the extension (only once, before the first
+execution) and then explicitly provide it as a command line argument:
+
+```
+VERSION=2.0.2
+mvn -q dependency:get -Dartifact="co.leantechniques:maven-buildtime-extension:$VERSION"
+mvn compile -Dmaven.ext.class.path="$HOME/.m2/repository/co/leantechniques/maven-buildtime-extension/$VERSION/maven-buildtime-extension-$VERSION.jar"
+```
+
 # Example
 
 ```
