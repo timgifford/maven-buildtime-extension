@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
-import org.slf4j.Logger;
 
 public class SessionTimer {
 
@@ -32,16 +31,16 @@ public class SessionTimer {
         return projects.get(projectArtifactId);
     }
 
-    public void write(Logger logger) {
+    public void write(LogOutput logOutput) {
 
-        logger.info("Build Time Summary:");
-        logger.info("");
+        logOutput.log("Build Time Summary:");
+        logOutput.log("");
         for(String projectName : projects.keySet()) {
-            logger.info(String.format("%s", projectName));
+            logOutput.log(String.format("%s", projectName));
             ProjectTimer projectTimer = projects.get(projectName);
-            projectTimer.write(logger);
+            projectTimer.write(logOutput);
         }
-        logger.info(DIVIDER);
+        logOutput.log(DIVIDER);
     }
 
     public void mojoStarted(MavenProject project, MojoExecution mojoExecution) {

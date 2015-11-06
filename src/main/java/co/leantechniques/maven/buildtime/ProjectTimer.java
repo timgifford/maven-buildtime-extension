@@ -4,8 +4,6 @@ import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.slf4j.Logger;
-
 public class ProjectTimer {
 
     private Map<String, MojoTimer> dataStore = new ConcurrentHashMap<String, MojoTimer>();
@@ -20,9 +18,9 @@ public class ProjectTimer {
         this(new ConcurrentHashMap<String, MojoTimer>(), systemClock);
     }
 
-    public void write(Logger logger) {
+    public void write(LogOutput logOutput) {
         for (MojoTimer mojo : dataStore.values()){
-            mojo.write(logger);
+            mojo.write(logOutput);
         }
     }
 

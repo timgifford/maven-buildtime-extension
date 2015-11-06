@@ -32,6 +32,8 @@ public class SessionTimerTest {
     private LinkedHashMap<String, MojoTimer> mojoTiming;
     @Mock
     private Logger logger;
+
+    private LogOutput logOutput;
     private MojoExecution mojoExecution;
     private MavenProject project;
     private PrintWriter printWriter;
@@ -40,6 +42,7 @@ public class SessionTimerTest {
 
     @Before
     public void setUp() throws Exception {
+        logOutput = new LogOutput(logger, true);
         existingProjects = new HashMap<String, ProjectTimer>();
         SystemClock mockClock = mock(SystemClock.class);
         when(mockClock.currentTimeMillis())
@@ -81,7 +84,7 @@ public class SessionTimerTest {
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.write(logger);
+        sessionTimer.write(logOutput);
 
         String dividerLine = SessionTimer.DIVIDER;
         verify(logger).info("Build Time Summary:");

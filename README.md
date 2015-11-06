@@ -4,9 +4,11 @@ displays the duration for each goal that is ran during your build.
 
 # Usage
 Put this in your pom.xml to find out why you are slow.
+By default this will log only to maven debug `-X,--debug`, however debug is quite noisy so you can enable output to normal log
+via the property `buildtime.output.log` in your pom or via commandline `-Dbuildtime.output.log=true`.
 
 ## Capture the results to a CSV file
-Thanks to [@leonard84](https://github.com/leonard84) for the contribution. You'll need to set a property to enable this feature. Eventually, we can enhance this funcationality to include other output formats. I personally would like to publish the results to an InfluxDb instance.
+Thanks to [@leonard84](https://github.com/leonard84) for the contribution. You'll need to set a property to enable this feature. Eventually, we can enhance this functionality to include other output formats. I personally would like to publish the results to an InfluxDb instance.
 
 ```
 mvn compile -Dbuildtime.output.csv=true -Dbuildtime.output.csv.file=classes\out.csv

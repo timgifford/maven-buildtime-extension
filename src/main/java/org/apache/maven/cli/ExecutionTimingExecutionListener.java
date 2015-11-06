@@ -10,6 +10,7 @@ import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
 import org.slf4j.Logger;
 
+import co.leantechniques.maven.buildtime.LogOutput;
 import co.leantechniques.maven.buildtime.SessionTimer;
 
 public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
@@ -17,6 +18,7 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
     public static final String BUILDTIME_OUTPUT_CSV_FILE_PROPERTY = "buildtime.output.csv.file";
     public static final String BUILDTIME_OUTPUT_CSV_FILE = "buildtime.csv";
     public static final String BUILDTIME_OUTPUT_CSV_PROPERTY = "buildtime.output.csv";
+    public static final String BUILDTIME_OUTPUT_LOG = "buildtime.output.log";
 
     private final Logger logger;
     private final SessionTimer session = new SessionTimer();
@@ -47,7 +49,8 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
     @Override
     public void sessionEnded(final ExecutionEvent event) {
         super.sessionEnded(event);
-        session.write(logger);
+        LogOutput logOutput = new LogOutput(logger, Boolean.parseBoolean(getExecutionProperty(event, BUILDTIME_OUTPUT_LOG, "false")));
+        session.write(logOutput);
         csvOutput(event);
 
     }
