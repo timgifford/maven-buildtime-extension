@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.util.Locale;
 
 import org.codehaus.plexus.util.StringUtils;
-import org.slf4j.Logger;
 
 public class MojoTimer {
 
@@ -45,9 +44,9 @@ public class MojoTimer {
         this.startTime = systemClock.currentTimeMillis();
     }
 
-    public void write(Logger logger) {
+    public void write(LogOutput logOutput) {
         // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
-        logger.info(String.format(Locale.ENGLISH, "  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
+        logOutput.log(String.format(Locale.ENGLISH, "  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
     }
 
     private String getDisplayName() {
