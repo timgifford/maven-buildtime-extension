@@ -26,7 +26,7 @@ Version 2.0+ will work with the latest version of Maven.
         <extension>
             <groupId>co.leantechniques</groupId>
             <artifactId>maven-buildtime-extension</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </extension>
     </extensions>
 </build>
@@ -55,7 +55,7 @@ case you must manually download the extension (only once, before the first
 execution) and then explicitly provide it as a command line argument:
 
 ```
-VERSION=2.0.2
+VERSION=2.0.3
 mvn -q dependency:get -Dartifact="co.leantechniques:maven-buildtime-extension:$VERSION"
 mvn compile -Dmaven.ext.class.path="$HOME/.m2/repository/co/leantechniques/maven-buildtime-extension/$VERSION/maven-buildtime-extension-$VERSION.jar"
 ```
