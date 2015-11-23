@@ -37,6 +37,7 @@ public class BuildTimeEventSpy extends AbstractEventSpy {
     @Override
     public void init(Context context) throws Exception {
         super.init(context);
+        logger.info("BuildTimeEventSpy is registered.");
     }
 
     @Override
