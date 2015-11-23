@@ -3,12 +3,15 @@ package co.leantechniques.maven.buildtime.output;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.Locale;
 
 import org.apache.maven.execution.ExecutionEvent;
 import org.slf4j.Logger;
 
+import co.leantechniques.maven.buildtime.AbstractTimerVisitor;
 import co.leantechniques.maven.buildtime.Constants;
 import co.leantechniques.maven.buildtime.MavenHelper;
+import co.leantechniques.maven.buildtime.MojoTimer;
 import co.leantechniques.maven.buildtime.SessionTimer;
 
 public class CsvReporter implements Reporter {
@@ -27,11 +30,6 @@ public class CsvReporter implements Reporter {
         return null;
     }
 
-    private void writeTo(PrintWriter printWriter, SessionTimer session) {
-        printWriter.println("\"Module\";\"Mojo\";\"Time\"");
-        session.writeTo(printWriter);
-    }
-
     public void performReport(Logger logger, ExecutionEvent event, SessionTimer session) {
         if (Boolean.parseBoolean(MavenHelper.getExecutionProperty(event, Constants.BUILDTIME_OUTPUT_CSV_PROPERTY, "false"))) {
             File file = getOutputFile(event);
@@ -39,7 +37,7 @@ public class CsvReporter implements Reporter {
                 PrintWriter printWriter = null;
                 try {
                     printWriter = new PrintWriter(file);
-                    writeTo(printWriter, session);
+                    writeTo(session, printWriter);
                 } catch (FileNotFoundException e) {
                     logger.error("Could not write report", e);
                 } finally {
@@ -48,6 +46,25 @@ public class CsvReporter implements Reporter {
                     }
                 }
             }
+        }
+    }
+
+    public void writeTo(SessionTimer session, PrintWriter printWriter) {
+        printWriter.println("\"Module\";\"Mojo\";\"Time\"");
+        session.accept(new CsvReportVisitor(printWriter));
+    }
+
+    public static class CsvReportVisitor extends AbstractTimerVisitor {
+        private PrintWriter printWriter;
+
+        public CsvReportVisitor(PrintWriter printWriter) {
+            this.printWriter = printWriter;
+        }
+
+        @Override
+        public void visit(MojoTimer mojoTimer) {
+            printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\"%n",
+                    mojoTimer.getProjectName(), mojoTimer.getName(), mojoTimer.getDuration() / 1000d);
         }
     }
 }

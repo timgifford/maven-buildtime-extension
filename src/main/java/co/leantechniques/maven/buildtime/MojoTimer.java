@@ -1,27 +1,24 @@
 package co.leantechniques.maven.buildtime;
 
-import java.io.PrintWriter;
-import java.util.Locale;
-
-import org.codehaus.plexus.util.StringUtils;
-
 public class MojoTimer {
 
-    public static final int MAX_NAME_LENGTH = 58;
+    private final String projectName;
+
     private String name;
     private long startTime = 0;
     private long endTime = 0;
     private SystemClock systemClock;
 
-    public MojoTimer(String name, SystemClock systemClock) {
-        this(name, 0,0, systemClock);
+    public MojoTimer(String projectName, String name, SystemClock systemClock) {
+        this(projectName, name, 0,0, systemClock);
     }
 
-    public MojoTimer(String name, long startTime, long endTime){
-        this(name, startTime, endTime, new SystemClock());
+    public MojoTimer(String projectName, String name, long startTime, long endTime){
+        this(projectName, name, startTime, endTime, new SystemClock());
     }
 
-    public MojoTimer(String name, long startTime, long endTime, SystemClock systemClock) {
+    public MojoTimer(String projectName, String name, long startTime, long endTime, SystemClock systemClock) {
+        this.projectName = projectName;
         this.name = name;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -36,6 +33,10 @@ public class MojoTimer {
         return name;
     }
 
+    public String getProjectName() {
+        return projectName;
+    }
+
     public void stop() {
         this.endTime = systemClock.currentTimeMillis();
     }
@@ -44,17 +45,7 @@ public class MojoTimer {
         this.startTime = systemClock.currentTimeMillis();
     }
 
-    public void write(LogOutput logOutput) {
-        // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
-        logOutput.log(String.format(Locale.ENGLISH, "  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
-    }
-
-    private String getDisplayName() {
-        String truncatedName = name.length() >= MAX_NAME_LENGTH ? StringUtils.substring(name, 0, MAX_NAME_LENGTH) : name + " ";
-        return StringUtils.rightPad(truncatedName, MAX_NAME_LENGTH, ".");
-    }
-
-    public void write(PrintWriter printWriter, String projectName) {
-        printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\"%n", projectName, name, (double)getDuration()/1000);
+    public void accept(TimerVisitor visitor){
+        visitor.visit(this);
     }
 }
