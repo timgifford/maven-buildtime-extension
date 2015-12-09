@@ -1,6 +1,5 @@
 package co.leantechniques.maven.buildtime;
 
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -18,12 +17,6 @@ public class ProjectTimer {
         this(new ConcurrentHashMap<String, MojoTimer>(), systemClock);
     }
 
-    public void write(LogOutput logOutput) {
-        for (MojoTimer mojo : dataStore.values()){
-            mojo.write(logOutput);
-        }
-    }
-
     public void stopTimerFor(MojoExecutionName me) {
         getMojoTimer(me).stop();
     }
@@ -38,9 +31,7 @@ public class ProjectTimer {
         return dataStore.get(name.getName());
     }
 
-    public void writeTo(PrintWriter printWriter, String projectName) {
-        for (MojoTimer mojo : dataStore.values()){
-            mojo.write(printWriter, projectName);
-        }
+    public Map<String, MojoTimer> getDataStore() {
+        return dataStore;
     }
 }

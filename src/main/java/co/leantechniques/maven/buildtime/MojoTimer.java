@@ -1,13 +1,7 @@
 package co.leantechniques.maven.buildtime;
 
-import java.io.PrintWriter;
-import java.util.Locale;
-
-import org.codehaus.plexus.util.StringUtils;
-
 public class MojoTimer {
 
-    public static final int MAX_NAME_LENGTH = 58;
     private String name;
     private long startTime = 0;
     private long endTime = 0;
@@ -42,19 +36,5 @@ public class MojoTimer {
 
     public void start() {
         this.startTime = systemClock.currentTimeMillis();
-    }
-
-    public void write(LogOutput logOutput) {
-        // 68 char width: coefficient-core .................................. SUCCESS [0.846s]
-        logOutput.log(String.format(Locale.ENGLISH, "  %s [%.3fs]", getDisplayName(), (double)getDuration()/1000));
-    }
-
-    private String getDisplayName() {
-        String truncatedName = name.length() >= MAX_NAME_LENGTH ? StringUtils.substring(name, 0, MAX_NAME_LENGTH) : name + " ";
-        return StringUtils.rightPad(truncatedName, MAX_NAME_LENGTH, ".");
-    }
-
-    public void write(PrintWriter printWriter, String projectName) {
-        printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\"%n", projectName, name, (double)getDuration()/1000);
     }
 }

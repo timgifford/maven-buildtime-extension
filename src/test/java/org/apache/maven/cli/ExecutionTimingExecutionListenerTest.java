@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import co.leantechniques.maven.buildtime.publisher.CsvPublisher;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
@@ -55,9 +56,9 @@ public class ExecutionTimingExecutionListenerTest {
         subject = new ExecutionTimingExecutionListener(logger);
 
         testFile = new File(temporaryFolder.getRoot(), "test.csv");
-        userProperties.setProperty(ExecutionTimingExecutionListener.BUILDTIME_OUTPUT_CSV_FILE_PROPERTY,
+        userProperties.setProperty(CsvPublisher.BUILDTIME_OUTPUT_CSV_FILE_PROPERTY,
                 testFile.getAbsolutePath());
-        userProperties.setProperty(ExecutionTimingExecutionListener.BUILDTIME_OUTPUT_CSV_PROPERTY, "true");
+        userProperties.setProperty(CsvPublisher.BUILDTIME_OUTPUT_CSV_PROPERTY, "true");
 
         when(sessionEndEvent.getSession()).thenReturn(session);
         when(session.getSystemProperties()).thenReturn(systemProperties);

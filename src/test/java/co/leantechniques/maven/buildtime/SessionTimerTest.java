@@ -3,6 +3,8 @@ package co.leantechniques.maven.buildtime;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -12,6 +14,9 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import co.leantechniques.maven.buildtime.publisher.CsvPublisher;
+import co.leantechniques.maven.buildtime.publisher.MavenPublisher;
+import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
@@ -84,15 +89,17 @@ public class SessionTimerTest {
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.write(logOutput);
+        LogOutputFactory logOutputFactory = mock(LogOutputFactory.class);
+        when(logOutputFactory.create(any(ExecutionEvent.class), eq(logger))).thenReturn(logOutput);
 
-        String dividerLine = SessionTimer.DIVIDER;
+        new MavenPublisher(logger, logOutputFactory).publish(null, sessionTimer);
+
         verify(logger).info("Build Time Summary:");
         verify(logger).info("");
         verify(logger).info("one");
         verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
         verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
-        verify(logger).info(dividerLine);
+        verify(logger).info(MavenPublisher.DIVIDER);
     }
 
     @Test
@@ -104,14 +111,15 @@ public class SessionTimerTest {
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.writeTo(printWriter);
+        new CsvPublisher(null).writeTo(printWriter, sessionTimer);
 
         printWriter.flush();
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"one\";\"artifactId:goal1\";\"0.001\"");
-        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        Assert.assertEquals("\"Module\";\"Mojo\";\"Time\"", split[0]);
+        Assert.assertEquals("\"one\";\"artifactId:goal1\";\"0.001\"", split[1]);
+        Assert.assertEquals("\"one\";\"artifactId:goal2\";\"0.002\"", split[2]);
     }
 
     @Test
