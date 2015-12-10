@@ -1,20 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>co.leantechniques</groupId>
-    <artifactId>maven-buildtime-extension-parent</artifactId>
+    <artifactId>maven-buildtime-extension</artifactId>
     <version>2.0.4-SNAPSHOT</version>
-    <packaging>pom</packaging>
+    <packaging>jar</packaging>
 
     <parent>
-        <groupId>org.sonatype.oss</groupId>
-        <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <groupId>co.leantechniques</groupId>
+        <artifactId>maven-buildtime-extension-parent</artifactId>
+        <version>2.0.4-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <name>Maven Buildtime Extension Parent</name>
-
+    <name>Maven Buildtime Extension</name>
     <description>
         This extension displays the duration of each plugin
         to discover why your build is slow.
@@ -35,8 +33,8 @@
         <url>https://github.com/timgifford/maven-buildtime-extension</url>
         <connection>scm:git:git@github.com:timgifford/maven-buildtime-extension.git</connection>
         <developerConnection>scm:git:git@github.com:timgifford/maven-buildtime-extension.git</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
+      <tag>HEAD</tag>
+  </scm>
 
     <developers>
         <developer>
@@ -47,42 +45,39 @@
         </developer>
     </developers>
 
-    <modules>
-        <module>maven-buildtime-extension</module>
-        <module>buildtime-maven-plugin</module>
-        <module>buildtime-api</module>
-    </modules>
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-core</artifactId>
-                <version>3.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-embedder</artifactId>
-                <version>3.2.1</version>
-            </dependency>
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.8.2</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-all</artifactId>
-                <version>1.9.0</version>
-                <scope>test</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-core</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-embedder</artifactId>
+            <version>3.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>buildtime-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <version>1.9.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <!--
     AVOID RELEASE REPOSITORY/PLUGINREPOSITORY:
     <repositories></repositories>
