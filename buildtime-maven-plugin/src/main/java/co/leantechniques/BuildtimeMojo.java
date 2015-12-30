@@ -24,10 +24,11 @@ public class BuildtimeMojo extends AbstractMojo {
     @Parameter( defaultValue="output.csv", property = "file", required = true)
     private File file;
 
-    @Parameter( defaultValue = "${project.build.directory}", property = "outputDir", required = true )
-    private String outputDirectory;
+//    @Parameter( defaultValue = "${project.build.directory}", property = "outputDir", required = true )
+//    private String outputDirectory;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-        this.getLog().info("OutputDirectory: " + outputDirectory);
+//        this.getLog().info("OutputDirectory: " + outputDirectory);
+        this.getLog().info("File: " + file.getAbsolutePath());
     }
 }

@@ -53,9 +53,7 @@ public class CsvPublisher implements Publisher {
     }
 
     private static File getOutputFile(final ExecutionEvent event) {
-//        String output = getExecutionProperty(event, BUILDTIME_OUTPUT_CSV_FILE_PROPERTY, BUILDTIME_OUTPUT_CSV_FILE);
         List<Plugin> buildPlugins = event.getSession().getTopLevelProject().getBuildPlugins();
-        Xpp3Dom configuration;
         String fileName = "output.csv";
         for (Plugin plugin : buildPlugins){
             if(plugin.getArtifactId().equalsIgnoreCase("buildtime-maven-plugin")){

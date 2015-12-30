@@ -14,15 +14,7 @@
     </properties>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>@project.groupId@</groupId>
-                <artifactId>buildtime-maven-plugin</artifactId>
-                <version>@project.version@</version>
-            </plugin>
-        </plugins>
         <extensions>
-
             <extension>
                 <groupId>@project.groupId@</groupId>
                 <artifactId>buildtime-mvn</artifactId>

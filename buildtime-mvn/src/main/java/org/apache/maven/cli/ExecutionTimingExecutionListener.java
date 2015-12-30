@@ -38,7 +38,6 @@ public class ExecutionTimingExecutionListener extends ExecutionEventLogger {
     public void sessionEnded(final ExecutionEvent event) {
         super.sessionEnded(event);
         new MavenPublisher(event.getSession().getTopLevelProject(), logger).publish(event, session);
-//        new CsvPublisher(logger).publish(event, session);
     }
 
     public void registerListenerOn(MavenSession session) {

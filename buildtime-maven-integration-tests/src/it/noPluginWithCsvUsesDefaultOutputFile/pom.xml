@@ -4,27 +4,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>co.leantechniques.it</groupId>
-    <artifactId>csv-extension-it</artifactId>
+    <artifactId>simple-it</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>csv extension</description>
+    <description>Given extension is included, but plugin isn't, then use defaults of the extension</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
-        <plugins>
-            <plugin>
-                <groupId>@project.groupId@</groupId>
-                <artifactId>buildtime-maven-plugin</artifactId>
-                <version>@project.version@</version>
-                <configuration>
-                    <file>output.csv</file>
-                </configuration>
-            </plugin>
-        </plugins>
-
         <extensions>
             <extension>
                 <groupId>@project.groupId@</groupId>

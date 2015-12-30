@@ -4,16 +4,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>co.leantechniques.it</groupId>
-    <artifactId>simple-it</artifactId>
+    <artifactId>csv-extension-it</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-    <description>Given extension is included, but plugin isn't, then no output</description>
+    <description>Plugin configuration is used by the extension</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>buildtime-maven-plugin</artifactId>
+                <version>@project.version@</version>
+                <configuration>
+                    <file>not-default-file.csv</file>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <extensions>
             <extension>
                 <groupId>@project.groupId@</groupId>
