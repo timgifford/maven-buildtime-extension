@@ -11,7 +11,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Properties;
 
+import org.apache.maven.execution.ExecutionEvent;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
@@ -23,6 +26,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
+import co.leantechniques.maven.buildtime.output.CsvReporter;
+import co.leantechniques.maven.buildtime.output.LogReporter;
+
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimerTest {
 
@@ -33,16 +39,28 @@ public class SessionTimerTest {
     @Mock
     private Logger logger;
 
-    private LogOutput logOutput;
+    @Mock
+    private ExecutionEvent sessionEndEvent;
+
+    @Mock
+    private MavenSession session;
+
+    private CsvReporter csvReporter;
+    private LogReporter logReporter;
     private MojoExecution mojoExecution;
     private MavenProject project;
     private PrintWriter printWriter;
 
     private ByteArrayOutputStream outputStream;
 
+    private Properties userProperties = new Properties();
+
+    private Properties systemProperties = new Properties();
+
     @Before
     public void setUp() throws Exception {
-        logOutput = new LogOutput(logger, true);
+        logReporter = new LogReporter();
+        csvReporter = new CsvReporter();
         existingProjects = new HashMap<String, ProjectTimer>();
         SystemClock mockClock = mock(SystemClock.class);
         when(mockClock.currentTimeMillis())
@@ -52,11 +70,17 @@ public class SessionTimerTest {
         sessionTimer = new SessionTimer(existingProjects, mockClock);
 
         mojoTiming = new LinkedHashMap<String, MojoTimer>();
-        oneProject = new ProjectTimer(mojoTiming, mockClock);
+        oneProject = new ProjectTimer("one", mojoTiming, mockClock);
         mojoExecution = createMojoExecution();
         project = createMavenProject();
         outputStream = new ByteArrayOutputStream();
         printWriter = new PrintWriter(outputStream);
+
+        userProperties.setProperty(Constants.BUILDTIME_OUTPUT_LOG_PROPERTY, "true");
+        when(sessionEndEvent.getSession()).thenReturn(session);
+        when(session.getSystemProperties()).thenReturn(systemProperties);
+        when(session.getUserProperties()).thenReturn(userProperties);
+        when(sessionEndEvent.getType()).thenReturn(ExecutionEvent.Type.SessionEnded);
     }
 
     @Test
@@ -77,16 +101,16 @@ public class SessionTimerTest {
 
     @Test
     public void writeOneProjectWithOnePlugin() {
-        MojoTimer goal1Timer = new MojoTimer("artifactId:goal1", 1, 2);
-        MojoTimer goal2Timer = new MojoTimer("artifactId:goal2", 1, 3);
+        MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
         mojoTiming.put(goal2Timer.getName(), goal2Timer);
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.write(logOutput);
+        logReporter.performReport(logger, sessionEndEvent, sessionTimer);
 
-        String dividerLine = SessionTimer.DIVIDER;
+        String dividerLine = LogReporter.DIVIDER;
         verify(logger).info("Build Time Summary:");
         verify(logger).info("");
         verify(logger).info("one");
@@ -97,21 +121,22 @@ public class SessionTimerTest {
 
     @Test
     public void writeToOneProjectWithOnePlugin() {
-        MojoTimer goal1Timer = new MojoTimer("artifactId:goal1", 1, 2);
-        MojoTimer goal2Timer = new MojoTimer("artifactId:goal2", 1, 3);
+        MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
         mojoTiming.put(goal2Timer.getName(), goal2Timer);
 
         existingProjects.put("one", oneProject);
 
-        sessionTimer.writeTo(printWriter);
+        csvReporter.writeTo(sessionTimer, printWriter);
 
         printWriter.flush();
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"one\";\"artifactId:goal1\";\"0.001\"");
-        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
+        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\"");
+        Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\"");
     }
 
     @Test
