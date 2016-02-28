@@ -8,7 +8,9 @@ By default this will log only to maven debug `-X,--debug`, however debug is quit
 via the property `buildtime.output.log` in your pom or via commandline `-Dbuildtime.output.log=true`.
 
 ## Capture the results to a CSV file
-Thanks to [@leonard84](https://github.com/leonard84) for the contribution. You'll need to set a property to enable this feature. Eventually, we can enhance this functionality to include other output formats. I personally would like to publish the results to an InfluxDb instance.
+Thanks to [@leonard84](https://github.com/leonard84) for the contribution. You'll need to set a property to enable this feature. 
+Eventually, we can enhance this functionality to include other output formats. 
+I personally would like to publish the results to an InfluxDb instance.
 
 ```
 mvn compile -Dbuildtime.output.csv=true -Dbuildtime.output.csv.file=classes\out.csv
@@ -17,7 +19,25 @@ mvn compile -Dbuildtime.output.csv=true -Dbuildtime.output.csv.file=classes\out.
 Maven introduced slf4j in version 3.2 which broke this build extension for Maven 3.0 users. 
 Version 2.0+ will work with the latest version of Maven.
 
-## Maven 3.2 - Use version 2.0+
+## Maven 3.2 - Use version 3.0+
+
+With version 3.0.0 we switched to Mavens `EventSpy` API which increases the compatibility with other tools, e.g. Jenkins which
+also use this API to instrument Maven. However this requires a different way of loading the extension.
+
+Create the following file `<projectroot>/.mvn/extenstion.xml` with this as content
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<extensions>
+    <extension>
+        <groupId>co.leantechniques</groupId>
+        <artifactId>maven-buildtime-extension</artifactId>
+        <version>3.0.0</version>
+    </extension>
+</extensions>
+```
+
+## Maven 3.2 - Use version 2.0+ ```Deprecated```
 
 
 ```
