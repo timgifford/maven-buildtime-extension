@@ -1,4 +1,5 @@
-#Overview
+[![Build Status](https://travis-ci.org/timgifford/maven-buildtime-extension.svg?branch=master)](https://travis-ci.org/timgifford/maven-buildtime-extension)
+# Overview
 Maven doesn't give you detailed information about where you build is taking the most time. This build time extension
 displays the duration for each goal that is ran during your build.
 
