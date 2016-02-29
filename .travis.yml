@@ -9,8 +9,11 @@ install: true             # skip default maven install since we use maven wrappe
 script:
  - ./mvnw install
 after_failure:
+ - find ./target/it/logging-it/ -type f
  - cat target/it/logging-it/build.log
+ - find ./target/it/both-it/ -type f
  - cat target/it/both-it/build.log
  - cat target/it/both-it/target/buildtime.csv
+ - find ./target/it/csv-it/ -type f
  - cat target/it/csv-it/build.log
  - cat target/it/csv-it/target/buildtime.csv
