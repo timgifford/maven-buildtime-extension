@@ -133,6 +133,9 @@
                     <settingsFile>src/it/settings.xml</settingsFile>
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <postBuildHookScript>verify</postBuildHookScript> <!-- no extension required -->
+                    <goals>
+                        <goal>-v</goal>
+                    </goals>
                 </configuration>
                 <executions>
                     <execution>
