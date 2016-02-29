@@ -134,7 +134,7 @@
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <postBuildHookScript>verify</postBuildHookScript> <!-- no extension required -->
                     <goals>
-                        <goal>-v</goal>
+                        <goal>package -V</goal>
                     </goals>
                 </configuration>
                 <executions>
