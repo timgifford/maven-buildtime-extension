@@ -8,3 +8,9 @@ jdk:
 install: true             # skip default maven install since we use maven wrapper
 script:
  - ./mvnw install
+after_failure:
+ - cat target/it/logging-it/build.log
+ - cat target/it/both-it/build.log
+ - cat target/it/both-it/target/buildtime.csv
+ - cat target/it/csv-it/build.log
+ - cat target/it/csv-it/target/buildtime.csv

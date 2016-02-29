@@ -141,9 +141,6 @@
                             <goal>install</goal>
                             <goal>run</goal>
                         </goals>
-                        <configuration>
-                            <debug>true</debug>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
