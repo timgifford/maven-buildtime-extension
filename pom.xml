@@ -129,9 +129,13 @@
                 <version>2.0.0</version>
                 <configuration>
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+                    <showErrors>true</showErrors>
                     <settingsFile>src/it/settings.xml</settingsFile>
                     <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
                     <postBuildHookScript>verify</postBuildHookScript> <!-- no extension required -->
+                    <goals>
+                        <goal>package -V</goal>
+                    </goals>
                 </configuration>
                 <executions>
                     <execution>

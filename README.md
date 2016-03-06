@@ -20,12 +20,13 @@ mvn compile -Dbuildtime.output.csv=true -Dbuildtime.output.csv.file=classes\out.
 Maven introduced slf4j in version 3.2 which broke this build extension for Maven 3.0 users. 
 Version 2.0+ will work with the latest version of Maven.
 
-## Maven 3.2 - Use version 3.0+
+## Maven 3.3 - Use version 3.0+
 
 With version 3.0.0 we switched to Mavens `EventSpy` API which increases the compatibility with other tools, e.g. Jenkins which
-also use this API to instrument Maven. However this requires a different way of loading the extension.
+also use this API to instrument Maven. However this requires a different way of loading the extension. This also requires at
+least Maven 3.3+. 
 
-Create the following file `<projectroot>/.mvn/extenstion.xml` with this as content
+Create the following file `<projectroot>/.mvn/extenstions.xml` with this as content
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -37,6 +38,9 @@ Create the following file `<projectroot>/.mvn/extenstion.xml` with this as conte
     </extension>
 </extensions>
 ```
+Due to [MNG-5786](https://issues.apache.org/jira/browse/MNG-5786) you might need to use Maven 3.3.9 if 
+`<projectroot>/.mvn/extenstions.xml` is not picked up. You can also check the build log for the presence of the string
+`BuildTimeEventSpy is registered.` which is loggged if the extension was successfully activated.
 
 ## Maven 3.2 - Use version 2.0+ ```Deprecated```
 
@@ -134,9 +138,9 @@ mvn compile -Dmaven.ext.class.path="$HOME/.m2/repository/co/leantechniques/maven
 
 # Release Process
 ```
-mvn release:prepare
+mvnw release:prepare
 
-mvn release:perform
+mvnw release:perform
 ```
 
 Follow the directions here: http://central.sonatype.org/pages/releasing-the-deployment.html
