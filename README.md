@@ -142,8 +142,3 @@ mvnw release:prepare
 
 mvnw release:perform
 ```
-
-Follow the directions here: http://central.sonatype.org/pages/releasing-the-deployment.html
-Find the staging repository 'comleantechniques-xxxx'
-Click ```Close``` to promote to release
-Click ```Release``` to publish to Release repository
