@@ -1,11 +1,11 @@
 [![Build Status](https://travis-ci.org/timgifford/maven-buildtime-extension.svg?branch=master)](https://travis-ci.org/timgifford/maven-buildtime-extension)
 # Overview
-Maven doesn't give you detailed information about where you build is taking the most time. This build time extension
-displays the duration for each goal that is ran during your build.
+Maven doesn't give you detailed information about where your build is taking the most time. This build time extension
+displays the duration for each goal that is run during your build.
 
 # Usage
 Put this in your pom.xml to find out why you are slow.
-By default this will log only to maven debug `-X,--debug`, however debug is quite noisy so you can enable output to normal log
+By default this will log only to maven debug `-X,--debug`, however debug is quite noisy, so you can enable output to normal log
 via the property `buildtime.output.log` in your pom or via commandline `-Dbuildtime.output.log=true`.
 
 ## Capture the results to a CSV file
@@ -22,11 +22,11 @@ Version 2.0+ will work with the latest version of Maven.
 
 ## Maven 3.3 - Use version 3.0+
 
-With version 3.0.0 we switched to Mavens `EventSpy` API which increases the compatibility with other tools, e.g. Jenkins which
+With version 3.0.0 we switched to Maven's `EventSpy` API which increases the compatibility with other tools, e.g. Jenkins which
 also use this API to instrument Maven. However this requires a different way of loading the extension. This also requires at
 least Maven 3.3+. 
 
-Create the following file `<projectroot>/.mvn/extenstions.xml` with this as content
+Create the following file `<projectroot>/.mvn/extensions.xml` with this as content
 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
@@ -39,8 +39,8 @@ Create the following file `<projectroot>/.mvn/extenstions.xml` with this as cont
 </extensions>
 ```
 Due to [MNG-5786](https://issues.apache.org/jira/browse/MNG-5786) you might need to use Maven 3.3.9 if 
-`<projectroot>/.mvn/extenstions.xml` is not picked up. You can also check the build log for the presence of the string
-`BuildTimeEventSpy is registered.` which is loggged if the extension was successfully activated.
+`<projectroot>/.mvn/extensions.xml` is not picked up. You can also check the build log for the presence of the string
+`BuildTimeEventSpy is registered.` which is logged if the extension was successfully activated.
 
 ## Maven 3.2 - Use version 2.0+ ```Deprecated```
 
