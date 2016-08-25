@@ -23,7 +23,9 @@ public class CsvReporter implements Reporter {
             if (file.isAbsolute()) {
                 file.getParentFile().mkdirs();
             } else {
-                file = new File(new File("target"), output);
+                File parent = new File("target");
+                parent.mkdirs();
+                file = new File(parent, output);
             }
             return file;
         }
