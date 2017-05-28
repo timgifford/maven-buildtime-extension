@@ -37,8 +37,8 @@ public class LogReporter implements Reporter {
 
         @Override
         public void visit(SessionTimer sessionTimer) {
+            logOutput.log(DIVIDER);
             logOutput.log("Build Time Summary:");
-            logOutput.log("");
             logOutput.log(DIVIDER);
         }
 

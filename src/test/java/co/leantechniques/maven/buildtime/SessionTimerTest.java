@@ -3,8 +3,8 @@ package co.leantechniques.maven.buildtime;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertSame;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
@@ -111,12 +112,14 @@ public class SessionTimerTest {
         logReporter.performReport(logger, sessionEndEvent, sessionTimer);
 
         String dividerLine = LogReporter.DIVIDER;
-        verify(logger).info("Build Time Summary:");
-        verify(logger).info("");
-        verify(logger).info("one");
-        verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
-        verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
-        verify(logger).info(dividerLine);
+
+        InOrder inOrder = inOrder(logger);
+        inOrder.verify(logger).info(dividerLine);
+        inOrder.verify(logger).info("Build Time Summary:");
+        inOrder.verify(logger).info(dividerLine);
+        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
+        inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
     }
 
     @Test
