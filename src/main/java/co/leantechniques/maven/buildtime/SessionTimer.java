@@ -1,20 +1,20 @@
 package co.leantechniques.maven.buildtime;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 
 public class SessionTimer {
-    private Map<String, ProjectTimer> projects;
+    private ConcurrentMap<String, ProjectTimer> projects;
     private SystemClock systemClock;
 
     public SessionTimer() {
         this(new ConcurrentHashMap<String, ProjectTimer>(), new SystemClock());
     }
 
-    public SessionTimer(Map<String, ProjectTimer> projects, SystemClock systemClock) {
+    public SessionTimer(ConcurrentMap<String, ProjectTimer> projects, SystemClock systemClock) {
         this.projects = projects;
         this.systemClock = systemClock;
     }
@@ -24,7 +24,9 @@ public class SessionTimer {
     }
 
     public ProjectTimer getProject(String projectArtifactId) {
-        if(!projects.containsKey(projectArtifactId)) projects.put(projectArtifactId, new ProjectTimer(projectArtifactId, systemClock));
+        if (!projects.containsKey(projectArtifactId)) 
+            projects.putIfAbsent(projectArtifactId, new ProjectTimer(projectArtifactId, systemClock));
+
         return projects.get(projectArtifactId);
     }
 

@@ -9,9 +9,9 @@ import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
@@ -33,10 +33,10 @@ import co.leantechniques.maven.buildtime.output.LogReporter;
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimerTest {
 
-    private HashMap<String,ProjectTimer> existingProjects;
+    private ConcurrentMap<String,ProjectTimer> existingProjects;
     private SessionTimer sessionTimer;
     private ProjectTimer oneProject;
-    private LinkedHashMap<String, MojoTimer> mojoTiming;
+    private ConcurrentMap<String, MojoTimer> mojoTiming;
     @Mock
     private Logger logger;
 
@@ -62,7 +62,7 @@ public class SessionTimerTest {
     public void setUp() throws Exception {
         logReporter = new LogReporter();
         csvReporter = new CsvReporter();
-        existingProjects = new HashMap<String, ProjectTimer>();
+        existingProjects = new ConcurrentHashMap<String, ProjectTimer>();
         SystemClock mockClock = mock(SystemClock.class);
         when(mockClock.currentTimeMillis())
                 .thenReturn(100L)
@@ -70,7 +70,7 @@ public class SessionTimerTest {
 
         sessionTimer = new SessionTimer(existingProjects, mockClock);
 
-        mojoTiming = new LinkedHashMap<String, MojoTimer>();
+        mojoTiming = new ConcurrentHashMap<String, MojoTimer>();
         oneProject = new ProjectTimer("one", mojoTiming, mockClock);
         mojoExecution = createMojoExecution();
         project = createMavenProject();
@@ -103,7 +103,7 @@ public class SessionTimerTest {
     @Test
     public void writeOneProjectWithOnePlugin() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
-        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 2, 4);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
         mojoTiming.put(goal2Timer.getName(), goal2Timer);
 
@@ -123,9 +123,31 @@ public class SessionTimerTest {
     }
 
     @Test
+    public void testResultsOrderedByStartTime() {
+        MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 2, 5);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
+        mojoTiming.put(goal1Timer.getName(), goal1Timer);
+        mojoTiming.put(goal2Timer.getName(), goal2Timer);
+
+        existingProjects.put("one", oneProject);
+
+        logReporter.performReport(logger, sessionEndEvent, sessionTimer);
+
+        String dividerLine = LogReporter.DIVIDER;
+
+        InOrder inOrder = inOrder(logger);
+        inOrder.verify(logger).info(dividerLine);
+        inOrder.verify(logger).info("Build Time Summary:");
+        inOrder.verify(logger).info(dividerLine);
+        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
+        inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.003s]");
+    }
+
+    @Test
     public void writeToOneProjectWithOnePlugin() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
-        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 2, 4);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
         mojoTiming.put(goal2Timer.getName(), goal2Timer);
 
