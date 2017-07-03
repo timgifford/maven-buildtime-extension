@@ -137,8 +137,9 @@ mvn compile -Dmaven.ext.class.path="$HOME/.m2/repository/co/leantechniques/maven
 ```
 
 # Release Process
+Sonatype requires all published components to be signed. These commands prompt for a `gpg passphase`. (Reminder for me: It is in your password vault)
 ```
-mvnw release:prepare
+./mvnw release:prepare
 
-mvnw release:perform
+./mvnw release:perform
 ```
