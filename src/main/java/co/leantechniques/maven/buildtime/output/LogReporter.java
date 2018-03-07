@@ -44,7 +44,7 @@ public class LogReporter implements Reporter {
 
         @Override
         public void visit(ProjectTimer projectTimer) {
-            logOutput.log(String.format("%s", projectTimer.getProjectName()));
+            logOutput.log(String.format("%s [%.3fs]", projectTimer.getProjectName(), projectTimer.getDuration() / 1000d));
         }
 
         @Override
