@@ -117,7 +117,7 @@ public class SessionTimerTest {
         inOrder.verify(logger).info(dividerLine);
         inOrder.verify(logger).info("Build Time Summary:");
         inOrder.verify(logger).info(dividerLine);
-        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("one [0.003s]");
         inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
         inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
     }
@@ -139,7 +139,7 @@ public class SessionTimerTest {
         inOrder.verify(logger).info(dividerLine);
         inOrder.verify(logger).info("Build Time Summary:");
         inOrder.verify(logger).info(dividerLine);
-        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("one [0.004s]");
         inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
         inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.003s]");
     }
