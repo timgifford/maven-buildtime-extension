@@ -38,6 +38,18 @@ public class ProjectTimer {
         return dataStore.get(name.getName());
     }
 
+    public Long getDuration() {
+        long startTime = Long.MAX_VALUE;
+        long endTime = 0;
+
+        for (MojoTimer mojoTimer : dataStore.values()) {
+            startTime = Math.min(startTime, mojoTimer.getStartTime());
+            endTime = Math.max(endTime, mojoTimer.getEndTime());
+        }
+
+        return endTime - startTime;
+    }
+
     public void accept(TimerVisitor visitor){
         visitor.visit(this);
 
