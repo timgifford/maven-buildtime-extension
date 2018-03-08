@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class ProjectTimer {
+public class ProjectTimer implements Comparable<ProjectTimer> {
 
     private final String projectName;
 
@@ -39,15 +39,7 @@ public class ProjectTimer {
     }
 
     public Long getDuration() {
-        long startTime = Long.MAX_VALUE;
-        long endTime = 0;
-
-        for (MojoTimer mojoTimer : dataStore.values()) {
-            startTime = Math.min(startTime, mojoTimer.getStartTime());
-            endTime = Math.max(endTime, mojoTimer.getEndTime());
-        }
-
-        return endTime - startTime;
+        return getProjectEndTime() - getProjectStartTime();
     }
 
     public void accept(TimerVisitor visitor){
@@ -61,7 +53,45 @@ public class ProjectTimer {
         }
     }
 
+    public int compareTo(ProjectTimer that) {
+        if (that == null)
+            return 1;
+
+        if (this == that)
+            return 0;
+
+        long thisStartTime = this.getProjectStartTime();
+        long thatStartTime = that.getProjectStartTime();
+
+        if (thisStartTime > thatStartTime)
+            return 1;
+        else if (thisStartTime < thatStartTime)
+            return -1;
+
+        return 0;
+    }
+
     public String getProjectName() {
         return projectName;
+    }
+
+    private long getProjectStartTime() {
+        long startTime = Long.MAX_VALUE;
+
+        for (MojoTimer mojoTimer : dataStore.values()) {
+            startTime = Math.min(startTime, mojoTimer.getStartTime());
+        }
+
+        return startTime;
+    }
+
+    private long getProjectEndTime() {
+        long endTime = 0;
+
+        for (MojoTimer mojoTimer : dataStore.values()) {
+            endTime = Math.max(endTime, mojoTimer.getEndTime());
+        }
+
+        return endTime;
     }
 }
