@@ -3,7 +3,7 @@ cache:
     - $HOME/.m2
 language: java
 jdk:
-  - oraclejdk7
+  - openjdk7
   - oraclejdk8
 install: true             # skip default maven install since we use maven wrapper
 script:
