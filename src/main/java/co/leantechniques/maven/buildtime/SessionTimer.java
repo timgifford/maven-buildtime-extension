@@ -1,5 +1,8 @@
 package co.leantechniques.maven.buildtime;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -32,7 +35,11 @@ public class SessionTimer {
 
     public void accept(TimerVisitor visitor) {
         visitor.visit(this);
-        for (ProjectTimer projectTimer : projects.values()) {
+
+        final List<ProjectTimer> projectTimers = new ArrayList<ProjectTimer>(projects.values());
+        Collections.sort(projectTimers);
+
+        for (ProjectTimer projectTimer : projectTimers) {
             projectTimer.accept(visitor);
         }
     }

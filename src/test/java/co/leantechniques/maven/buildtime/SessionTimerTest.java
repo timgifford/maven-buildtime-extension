@@ -36,7 +36,10 @@ public class SessionTimerTest {
     private ConcurrentMap<String,ProjectTimer> existingProjects;
     private SessionTimer sessionTimer;
     private ProjectTimer oneProject;
+    private ProjectTimer anotherProject;
     private ConcurrentMap<String, MojoTimer> mojoTiming;
+    private ConcurrentMap<String, MojoTimer> anotherMojoTiming;
+
     @Mock
     private Logger logger;
 
@@ -71,7 +74,9 @@ public class SessionTimerTest {
         sessionTimer = new SessionTimer(existingProjects, mockClock);
 
         mojoTiming = new ConcurrentHashMap<String, MojoTimer>();
+        anotherMojoTiming = new ConcurrentHashMap<String, MojoTimer>();
         oneProject = new ProjectTimer("one", mojoTiming, mockClock);
+        anotherProject = new ProjectTimer("two", anotherMojoTiming, mockClock);
         mojoExecution = createMojoExecution();
         project = createMavenProject();
         outputStream = new ByteArrayOutputStream();
@@ -117,7 +122,7 @@ public class SessionTimerTest {
         inOrder.verify(logger).info(dividerLine);
         inOrder.verify(logger).info("Build Time Summary:");
         inOrder.verify(logger).info(dividerLine);
-        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("one [0.003s]");
         inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.001s]");
         inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
     }
@@ -139,7 +144,7 @@ public class SessionTimerTest {
         inOrder.verify(logger).info(dividerLine);
         inOrder.verify(logger).info("Build Time Summary:");
         inOrder.verify(logger).info(dividerLine);
-        inOrder.verify(logger).info("one");
+        inOrder.verify(logger).info("one [0.004s]");
         inOrder.verify(logger).info("  artifactId:goal2 ......................................... [0.002s]");
         inOrder.verify(logger).info("  artifactId:goal1 ......................................... [0.003s]");
     }
@@ -162,6 +167,35 @@ public class SessionTimerTest {
         Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
         Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\"");
         Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\"");
+    }
+
+    @Test
+    public void testThatProjectsAreOrderedByStartTime() {
+        MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 6, 9);
+        MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 5, 7);
+        mojoTiming.put(goal1Timer.getName(), goal1Timer);
+        mojoTiming.put(goal2Timer.getName(), goal2Timer);
+
+        existingProjects.put("one", oneProject);
+
+        MojoTimer goal3Timer = new MojoTimer("two", "artifactId:goal3", 1, 2);
+        MojoTimer goal4Timer = new MojoTimer("two", "artifactId:goal4", 2, 4);
+        anotherMojoTiming.put(goal3Timer.getName(), goal3Timer);
+        anotherMojoTiming.put(goal4Timer.getName(), goal4Timer);
+
+        existingProjects.put("two", anotherProject);
+
+        csvReporter.writeTo(sessionTimer, printWriter);
+
+        printWriter.flush();
+        String output = outputStream.toString();
+        String[] split = output.split("\r?\n");
+
+        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
+        Assert.assertEquals(split[1], "\"two\";\"artifactId:goal3\";\"0.001\"");
+        Assert.assertEquals(split[2], "\"two\";\"artifactId:goal4\";\"0.002\"");
+        Assert.assertEquals(split[3], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        Assert.assertEquals(split[4], "\"one\";\"artifactId:goal1\";\"0.003\"");
     }
 
     @Test

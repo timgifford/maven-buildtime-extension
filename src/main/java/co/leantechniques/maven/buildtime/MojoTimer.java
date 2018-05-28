@@ -65,4 +65,12 @@ public class MojoTimer implements Comparable<MojoTimer> {
 
         return 0;
     }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
 }
