@@ -143,3 +143,10 @@ Sonatype requires all published components to be signed. These commands prompt f
 
 ./mvnw release:perform
 ```
+
+2018-05-30
+Had to add this command to the my console to get it signed:
+```bash
+GPG_TTY=$(tty)
+export GPG_TTY
+```
