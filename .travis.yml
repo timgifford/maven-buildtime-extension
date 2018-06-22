@@ -7,6 +7,8 @@ jdk:
   - oraclejdk9
   - oraclejdk10
   - oraclejdk11
+before_install:
+  - chmod +x mvnw
 install: true             # skip default maven install since we use maven wrapper
 script:
  - ./mvnw install
