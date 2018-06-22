@@ -49,6 +49,13 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <mavenVersion>3.5.2</mavenVersion>
+        <junit.version>4.12</junit.version>
+        <mockito-all.version>1.10.19</mockito-all.version>
+        <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+        <plexus-component-metadata.version>1.7.1</plexus-component-metadata.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-invoker-plugin.version>3.0.1</maven-invoker-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     </properties>
 
     <dependencies>
@@ -65,17 +72,21 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>2.0.2-beta</version>
+            <version>${mockito-all.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <!-- AVOID RELEASE REPOSITORY/PLUGINREPOSITORY: <repositories></repositories> <pluginRepositories></pluginRepositories> -->
+    <!-- 
+    AVOID RELEASE REPOSITORY/PLUGINREPOSITORY: 
+    <repositories></repositories> 
+    <pluginRepositories></pluginRepositories> 
+    -->
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -91,7 +102,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>${nexus-staging-maven-plugin.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -103,7 +114,7 @@
             <plugin>
                 <groupId>org.codehaus.plexus</groupId>
                 <artifactId>plexus-component-metadata</artifactId>
-                <version>1.7.1</version>
+                <version>${plexus-component-metadata.version}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -116,14 +127,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.5.3</version>
+                <version>${maven-release-plugin.version}</version>
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-invoker-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>${maven-invoker-plugin.version}</version>
                 <configuration>
                     <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
                     <showErrors>true</showErrors>
@@ -147,7 +158,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M1</version>
+                <version>${maven-enforcer-plugin.version}</version>
                 <configuration>
                     <rules>
                         <requireJavaVersion>

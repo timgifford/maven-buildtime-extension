@@ -1,5 +1,5 @@
-[![Build Status](https://travis-ci.org/mithuns/maven-buildtime-extension.svg?branch=upgrades)](https://travis-ci.org/mithuns/maven-buildtime-extension)
-[![license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/mithuns/maven-buildtime-extension/blob/upgrades/LICENSE.txt)
+[![Build Status](https://travis-ci.org/timgifford/maven-buildtime-extension.svg?branch=master)](https://travis-ci.org/timgifford/maven-buildtime-extension)
+[![license](http://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/timgifford/maven-buildtime-extension/blob/upgrades/LICENSE.txt)
 # Overview
 Maven doesn't give you detailed information about where your build is taking the most time. This build time extension
 displays the duration for each goal that is run during your build.
