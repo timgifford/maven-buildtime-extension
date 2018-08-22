@@ -12,7 +12,7 @@ public class MavenHelper {
         MavenSession mavenSession = event.getSession();
         Properties systemProperties = mavenSession.getSystemProperties();
         Properties userProperties = mavenSession.getUserProperties();
-		Properties projectProperties = mavenSession.getTopLevelProject() == null ? null : mavenSession.getTopLevelProject().getProperties();
+        Properties projectProperties = mavenSession.getTopLevelProject() == null ? null : mavenSession.getTopLevelProject().getProperties();
         String output = userProperties.getProperty(property);
         output = output == null ? projectProperties != null ? projectProperties.getProperty(property) : null : output;
         output = output == null ? systemProperties.getProperty(property) : output;
