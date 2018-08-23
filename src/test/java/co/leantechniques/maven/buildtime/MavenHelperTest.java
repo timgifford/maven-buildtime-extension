@@ -1,10 +1,3 @@
-/*
- * Copyright 2018 8D Technologies, Inc. All Rights Reserved.
- *
- * This software is the proprietary information of 8D Technologies, Inc.
- * Use is subject to license terms.
- */
-
 package co.leantechniques.maven.buildtime;
 
 import static org.junit.Assert.assertEquals;
