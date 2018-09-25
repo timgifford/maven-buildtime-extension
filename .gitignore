@@ -1,3 +1,32 @@
-.idea/
-target/
+# Mac files
+.DS_Store
+
+# Eclipse files
+.buildpath
+
+# Maven project files
+.classpath
+.project
+.settings
+
+# IntelliJ project files
+.idea
 *.iml
+*.ipr
+*.iws
+
+bin
+target
+derby.log
+
+.clover
+.fbprefs
+*.orig
+
+release.properties
+dependency-reduced-pom.xml
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+*.log
+*.log.gz
+*.bak
