@@ -1,7 +1,7 @@
 package org.apache.maven.cli;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -11,27 +11,27 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Pattern;
 
+import io.github.glytching.junit.extension.folder.TemporaryFolder;
+import io.github.glytching.junit.extension.folder.TemporaryFolderExtension;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
 import co.leantechniques.maven.buildtime.Constants;
 import co.leantechniques.maven.buildtime.output.CsvReporter;
 import co.leantechniques.maven.buildtime.output.LogReporter;
 
-@RunWith(MockitoJUnitRunner.class)
-public class BuildTimeEventSpyTest {
+@ExtendWith({MockitoExtension.class, TemporaryFolderExtension.class})
+class BuildTimeEventSpyTest {
 
     @Mock
     private Logger logger;
@@ -42,23 +42,23 @@ public class BuildTimeEventSpyTest {
     @Mock
     private MavenSession session;
 
-    private Properties userProperties = new Properties();
+    private final Properties userProperties = new Properties();
 
-    private Properties systemProperties = new Properties();
+    private final Properties systemProperties = new Properties();
 
-    @Rule
-    public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
+    public TemporaryFolder temporaryFolder;
 
     private BuildTimeEventSpy subject;
 
     private File testFile;
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeEach
+    public void setUp(TemporaryFolder temporaryFolder) throws IOException {
         subject = new BuildTimeEventSpy(logger, new LogReporter(), new CsvReporter());
 
-        testFile = new File(temporaryFolder.getRoot(), "test.csv");
+        this.temporaryFolder = temporaryFolder;
+
+        testFile = this.temporaryFolder.createFile("test.csv");
         userProperties.setProperty(Constants.BUILDTIME_OUTPUT_CSV_FILE_PROPERTY,
                 testFile.getAbsolutePath());
         userProperties.setProperty(Constants.BUILDTIME_OUTPUT_CSV_PROPERTY, "true");
@@ -70,7 +70,7 @@ public class BuildTimeEventSpyTest {
     }
 
     @Test
-    public void testCsvHeaderOutput() throws Exception {
+    void testCsvHeaderOutput() throws Exception {
         subject.onEvent(sessionEndEvent);
 
         assertTrue(testFile.exists());
@@ -80,7 +80,7 @@ public class BuildTimeEventSpyTest {
 
 
     @Test
-    public void testCsvEntries() throws Exception {
+    void testCsvEntries() throws Exception {
         ExecutionEvent mojo = mock(ExecutionEvent.class);
         when(mojo.getProject()).thenReturn(createMavenProject());
         when(mojo.getMojoExecution()).thenReturn(createMojoExecution());
