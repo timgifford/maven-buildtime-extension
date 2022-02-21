@@ -1,11 +1,9 @@
 package co.leantechniques.maven.buildtime;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertNotNull;
-import static junit.framework.Assert.assertSame;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
@@ -18,20 +16,19 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.project.MavenProject;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 
 import co.leantechniques.maven.buildtime.output.CsvReporter;
 import co.leantechniques.maven.buildtime.output.LogReporter;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SessionTimerTest {
+@ExtendWith(MockitoExtension.class)
+class SessionTimerTest {
 
     private ConcurrentMap<String,ProjectTimer> existingProjects;
     private SessionTimer sessionTimer;
@@ -57,24 +54,24 @@ public class SessionTimerTest {
 
     private ByteArrayOutputStream outputStream;
 
-    private Properties userProperties = new Properties();
+    private final Properties userProperties = new Properties();
 
-    private Properties systemProperties = new Properties();
+    private final Properties systemProperties = new Properties();
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    public void setUp() {
         logReporter = new LogReporter();
         csvReporter = new CsvReporter();
-        existingProjects = new ConcurrentHashMap<String, ProjectTimer>();
+        existingProjects = new ConcurrentHashMap<>();
         SystemClock mockClock = mock(SystemClock.class);
-        when(mockClock.currentTimeMillis())
+        lenient().when(mockClock.currentTimeMillis())
                 .thenReturn(100L)
                 .thenReturn(200L);
 
         sessionTimer = new SessionTimer(existingProjects, mockClock);
 
-        mojoTiming = new ConcurrentHashMap<String, MojoTimer>();
-        anotherMojoTiming = new ConcurrentHashMap<String, MojoTimer>();
+        mojoTiming = new ConcurrentHashMap<>();
+        anotherMojoTiming = new ConcurrentHashMap<>();
         oneProject = new ProjectTimer("one", mojoTiming, mockClock);
         anotherProject = new ProjectTimer("two", anotherMojoTiming, mockClock);
         mojoExecution = createMojoExecution();
@@ -83,21 +80,21 @@ public class SessionTimerTest {
         printWriter = new PrintWriter(outputStream);
 
         userProperties.setProperty(Constants.BUILDTIME_OUTPUT_LOG_PROPERTY, "true");
-        when(sessionEndEvent.getSession()).thenReturn(session);
-        when(session.getSystemProperties()).thenReturn(systemProperties);
-        when(session.getUserProperties()).thenReturn(userProperties);
-        when(sessionEndEvent.getType()).thenReturn(ExecutionEvent.Type.SessionEnded);
+        lenient().when(sessionEndEvent.getSession()).thenReturn(session);
+        lenient().when(session.getSystemProperties()).thenReturn(systemProperties);
+        lenient().when(session.getUserProperties()).thenReturn(userProperties);
+        lenient().when(sessionEndEvent.getType()).thenReturn(ExecutionEvent.Type.SessionEnded);
     }
 
     @Test
-    public void getProjectReturnsNewWhenNotExists(){
+    void getProjectReturnsNewWhenNotExists(){
         ProjectTimer actual = sessionTimer.getProject("not existing");
 
         assertNotNull(actual);
     }
 
     @Test
-    public void getProjectReturnsSameWhenExists() {
+    void getProjectReturnsSameWhenExists() {
         existingProjects.put("one", oneProject);
 
         ProjectTimer actual = sessionTimer.getProject("one");
@@ -106,7 +103,7 @@ public class SessionTimerTest {
     }
 
     @Test
-    public void writeOneProjectWithOnePlugin() {
+    void writeOneProjectWithOnePlugin() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
         MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 2, 4);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
@@ -128,7 +125,7 @@ public class SessionTimerTest {
     }
 
     @Test
-    public void testResultsOrderedByStartTime() {
+    void verifyResultsOrderedByStartTime() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 2, 5);
         MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 1, 3);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
@@ -150,7 +147,7 @@ public class SessionTimerTest {
     }
 
     @Test
-    public void writeToOneProjectWithOnePlugin() {
+    void writeToOneProjectWithOnePlugin() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 1, 2);
         MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 2, 4);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
@@ -164,13 +161,13 @@ public class SessionTimerTest {
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
-        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\"");
-        Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        assertEquals("\"Module\";\"Mojo\";\"Time\"", split[0]);
+        assertEquals("\"one\";\"artifactId:goal1\";\"0.001\"", split[1]);
+        assertEquals("\"one\";\"artifactId:goal2\";\"0.002\"", split[2]);
     }
 
     @Test
-    public void testThatProjectsAreOrderedByStartTime() {
+    void verifyThatProjectsAreOrderedByStartTime() {
         MojoTimer goal1Timer = new MojoTimer("one", "artifactId:goal1", 6, 9);
         MojoTimer goal2Timer = new MojoTimer("one", "artifactId:goal2", 5, 7);
         mojoTiming.put(goal1Timer.getName(), goal1Timer);
@@ -191,31 +188,31 @@ public class SessionTimerTest {
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
-        Assert.assertEquals(split[1], "\"two\";\"artifactId:goal3\";\"0.001\"");
-        Assert.assertEquals(split[2], "\"two\";\"artifactId:goal4\";\"0.002\"");
-        Assert.assertEquals(split[3], "\"one\";\"artifactId:goal2\";\"0.002\"");
-        Assert.assertEquals(split[4], "\"one\";\"artifactId:goal1\";\"0.003\"");
+        assertEquals("\"Module\";\"Mojo\";\"Time\"", split[0]);
+        assertEquals("\"two\";\"artifactId:goal3\";\"0.001\"", split[1]);
+        assertEquals("\"two\";\"artifactId:goal4\";\"0.002\"", split[2]);
+        assertEquals("\"one\";\"artifactId:goal2\";\"0.002\"", split[3]);
+        assertEquals("\"one\";\"artifactId:goal1\";\"0.003\"", split[4]);
     }
 
     @Test
-    public void successfulMojoShouldStopTimer(){
+    void successfulMojoShouldStopTimer(){
         sessionTimer.mojoStarted(project, mojoExecution);
         sessionTimer.mojoSucceeded(project, mojoExecution);
 
         MojoTimer mojoTimer = sessionTimer.getMojoTimer(project, mojoExecution);
 
-        assertEquals(new Long(100), mojoTimer.getDuration());
+        assertEquals(Long.valueOf(100), mojoTimer.getDuration());
     }
 
     @Test
-    public void failureMojoShouldStopTimer(){
+    void failureMojoShouldStopTimer(){
         sessionTimer.mojoStarted(project, mojoExecution);
         sessionTimer.mojoFailed(project, mojoExecution);
 
         MojoTimer mojoTimer = sessionTimer.getMojoTimer(project, mojoExecution);
 
-        assertEquals(new Long(100), mojoTimer.getDuration());
+        assertEquals(Long.valueOf(100), mojoTimer.getDuration());
     }
 
     private MojoExecution createMojoExecution() {

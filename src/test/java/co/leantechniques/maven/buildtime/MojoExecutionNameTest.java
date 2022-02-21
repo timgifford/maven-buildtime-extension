@@ -2,14 +2,14 @@ package co.leantechniques.maven.buildtime;
 
 import org.apache.maven.model.Plugin;
 import org.apache.maven.plugin.MojoExecution;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MojoExecutionNameTest {
+class MojoExecutionNameTest {
 
     @Test
-    public void getName() throws Exception {
+    void getName() {
         Plugin plugin = new Plugin();
         plugin.setArtifactId("artifact");
         MojoExecution execution = new MojoExecution(plugin, "goal", "id");
