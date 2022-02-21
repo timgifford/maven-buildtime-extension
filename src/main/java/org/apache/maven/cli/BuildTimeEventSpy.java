@@ -3,6 +3,7 @@ package org.apache.maven.cli;
 import java.util.Arrays;
 import java.util.List;
 
+import co.leantechniques.maven.buildtime.output.JsonReporter;
 import org.apache.maven.eventspy.AbstractEventSpy;
 import org.apache.maven.eventspy.EventSpy;
 import org.apache.maven.execution.ExecutionEvent;
@@ -21,7 +22,7 @@ public class BuildTimeEventSpy extends AbstractEventSpy {
     @Requirement
     private Logger logger;
 
-    private List<Reporter> reporters;
+    private final List<Reporter> reporters;
 
     public BuildTimeEventSpy(Logger logger, Reporter... reporters) {
         this.logger = logger;
@@ -29,7 +30,7 @@ public class BuildTimeEventSpy extends AbstractEventSpy {
     }
 
     public BuildTimeEventSpy() {
-        reporters = Arrays.asList(new LogReporter(), new CsvReporter());
+        reporters = Arrays.asList(new LogReporter(), new CsvReporter(), new JsonReporter());
     }
 
     private final SessionTimer session = new SessionTimer();
@@ -41,13 +42,13 @@ public class BuildTimeEventSpy extends AbstractEventSpy {
     }
 
     @Override
-    public void onEvent(Object event) throws Exception {
+    public void onEvent(Object event) {
         if (event instanceof ExecutionEvent) {
             onEvent((ExecutionEvent) event);
         }
     }
 
-    private void onEvent(ExecutionEvent event) throws Exception {
+    private void onEvent(ExecutionEvent event) {
         switch (event.getType()) {
         case MojoStarted:
             session.mojoStarted(event.getProject(), event.getMojoExecution());
@@ -69,12 +70,6 @@ public class BuildTimeEventSpy extends AbstractEventSpy {
             //Ignore other events
         }
     }
-
-    @Override
-    public void close() throws Exception {
-        super.close();
-    }
-
 
     private void doReport(ExecutionEvent event) {
         for (Reporter reporter : reporters) {
