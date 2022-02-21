@@ -1,6 +1,6 @@
 package co.leantechniques.maven.buildtime;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 import java.util.Properties;
@@ -8,14 +8,14 @@ import java.util.Properties;
 import org.apache.maven.execution.ExecutionEvent;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
-public class MavenHelperTest {
+@ExtendWith(MockitoExtension.class)
+class MavenHelperTest {
 
 	@Mock
 	private ExecutionEvent sessionEndEvent;
@@ -23,13 +23,13 @@ public class MavenHelperTest {
 	@Mock
 	private MavenSession session;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	public void setUp() {
 		when( sessionEndEvent.getSession() ).thenReturn( session );
 	}
 
 	@Test
-	public void testPropertyPriorityUser() throws Exception {
+	void testPropertyPriorityUser() {
 		Properties systemProperties = new Properties();
 		systemProperties.setProperty( Constants.BUILDTIME_OUTPUT_LOG_PROPERTY, "systemProperty" );
 		MavenProject mavenProject = new MavenProject();
@@ -45,7 +45,7 @@ public class MavenHelperTest {
 	}
 
 	@Test
-	public void testPropertyPriorityProject() throws Exception {
+	void testPropertyPriorityProject() {
 		Properties systemProperties = new Properties();
 		systemProperties.setProperty( Constants.BUILDTIME_OUTPUT_LOG_PROPERTY, "systemProperty" );
 		MavenProject mavenProject = new MavenProject();
@@ -61,7 +61,7 @@ public class MavenHelperTest {
 
 
 	@Test
-	public void testPropertyPrioritySystem() throws Exception {
+	void testPropertyPrioritySystem() {
 		Properties systemProperties = new Properties();
 		systemProperties.setProperty( Constants.BUILDTIME_OUTPUT_LOG_PROPERTY, "systemProperty" );
 		MavenProject mavenProject = new MavenProject();
@@ -75,7 +75,7 @@ public class MavenHelperTest {
 	}
 
 	@Test
-	public void testPropertyPriorityDefault() throws Exception {
+	void testPropertyPriorityDefault() {
 		Properties systemProperties = new Properties();
 		MavenProject mavenProject = new MavenProject();
 		Properties userProperties = new Properties();
