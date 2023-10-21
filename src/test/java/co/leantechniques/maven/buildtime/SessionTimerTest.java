@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InOrder;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
 import co.leantechniques.maven.buildtime.output.CsvReporter;
@@ -86,7 +86,6 @@ public class SessionTimerTest {
         when(sessionEndEvent.getSession()).thenReturn(session);
         when(session.getSystemProperties()).thenReturn(systemProperties);
         when(session.getUserProperties()).thenReturn(userProperties);
-        when(sessionEndEvent.getType()).thenReturn(ExecutionEvent.Type.SessionEnded);
     }
 
     @Test
