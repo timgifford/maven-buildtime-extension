@@ -166,6 +166,7 @@ public class SessionTimerTest {
         Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
         Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\"");
         Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        Assert.assertEquals(split.length, 3);
     }
 
     @Test
@@ -195,6 +196,7 @@ public class SessionTimerTest {
         Assert.assertEquals(split[2], "\"two\";\"artifactId:goal4\";\"0.002\"");
         Assert.assertEquals(split[3], "\"one\";\"artifactId:goal2\";\"0.002\"");
         Assert.assertEquals(split[4], "\"one\";\"artifactId:goal1\";\"0.003\"");
+        Assert.assertEquals(split.length, 5);
     }
 
     @Test
