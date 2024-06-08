@@ -52,7 +52,7 @@ public class CsvReporter implements Reporter {
     }
 
     public void writeTo(SessionTimer session, PrintWriter printWriter) {
-        printWriter.println("\"Module\";\"Mojo\";\"Time\"");
+        printWriter.println("\"Module\";\"Mojo\";\"Time\";\"Start\";\"End\"");
         session.accept(new CsvReportVisitor(printWriter));
     }
 
@@ -65,8 +65,8 @@ public class CsvReporter implements Reporter {
 
         @Override
         public void visit(MojoTimer mojoTimer) {
-            printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\"%n",
-                    mojoTimer.getProjectName(), mojoTimer.getName(), mojoTimer.getDuration() / 1000d);
+            printWriter.format(Locale.ENGLISH, "\"%s\";\"%s\";\"%.3f\";\"%d\";\"%d\"%n",
+                    mojoTimer.getProjectName(), mojoTimer.getName(), mojoTimer.getDuration() / 1000d, mojoTimer.getStartTime(), mojoTimer.getEndTime());
         }
     }
 }

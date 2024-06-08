@@ -33,6 +33,8 @@ import co.leantechniques.maven.buildtime.output.LogReporter;
 @RunWith(MockitoJUnitRunner.class)
 public class BuildTimeEventSpyTest {
 
+    private static final String CSV_HEADERS = "\"Module\";\"Mojo\";\"Time\";\"Start\";\"End\"";
+
     @Mock
     private Logger logger;
 
@@ -75,7 +77,7 @@ public class BuildTimeEventSpyTest {
 
         assertTrue(testFile.exists());
         List<String> lines = FileUtils.loadFile(testFile);
-        assertEquals("\"Module\";\"Mojo\";\"Time\"", lines.get(0));
+        assertEquals(CSV_HEADERS, lines.get(0));
     }
 
 
@@ -93,14 +95,16 @@ public class BuildTimeEventSpyTest {
 
         assertTrue(testFile.exists());
         List<String> lines = FileUtils.loadFile(testFile);
-        assertEquals("\"Module\";\"Mojo\";\"Time\"", lines.get(0));
+        assertEquals(CSV_HEADERS, lines.get(0));
 
         String[] split = lines.get(1).split(";");
 
-        assertEquals(3, split.length);
+        assertEquals(5, split.length);
         assertEquals("\"maven-project-artifact\"", split[0]);
         assertEquals("\"plugin:goal (executionId)\"", split[1]);
         assertTrue(Pattern.matches("\"\\d+\\.\\d+\"", split[2]));
+        assertTrue(Pattern.matches("\"\\d+\"", split[3]));
+        assertTrue(Pattern.matches("\"\\d+\"", split[4]));
 
     }
 

@@ -33,6 +33,8 @@ import co.leantechniques.maven.buildtime.output.LogReporter;
 @RunWith(MockitoJUnitRunner.class)
 public class SessionTimerTest {
 
+    private static final String CSV_HEADERS = "\"Module\";\"Mojo\";\"Time\";\"Start\";\"End\"";
+
     private ConcurrentMap<String,ProjectTimer> existingProjects;
     private SessionTimer sessionTimer;
     private ProjectTimer oneProject;
@@ -163,9 +165,9 @@ public class SessionTimerTest {
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
-        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\"");
-        Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\"");
+        Assert.assertEquals(split[0], CSV_HEADERS);
+        Assert.assertEquals(split[1], "\"one\";\"artifactId:goal1\";\"0.001\";\"1\";\"2\"");
+        Assert.assertEquals(split[2], "\"one\";\"artifactId:goal2\";\"0.002\";\"2\";\"4\"");
         Assert.assertEquals(split.length, 3);
     }
 
@@ -191,11 +193,11 @@ public class SessionTimerTest {
         String output = outputStream.toString();
         String[] split = output.split("\r?\n");
 
-        Assert.assertEquals(split[0], "\"Module\";\"Mojo\";\"Time\"");
-        Assert.assertEquals(split[1], "\"two\";\"artifactId:goal3\";\"0.001\"");
-        Assert.assertEquals(split[2], "\"two\";\"artifactId:goal4\";\"0.002\"");
-        Assert.assertEquals(split[3], "\"one\";\"artifactId:goal2\";\"0.002\"");
-        Assert.assertEquals(split[4], "\"one\";\"artifactId:goal1\";\"0.003\"");
+        Assert.assertEquals(split[0], CSV_HEADERS);
+        Assert.assertEquals(split[1], "\"two\";\"artifactId:goal3\";\"0.001\";\"1\";\"2\"");
+        Assert.assertEquals(split[2], "\"two\";\"artifactId:goal4\";\"0.002\";\"2\";\"4\"");
+        Assert.assertEquals(split[3], "\"one\";\"artifactId:goal2\";\"0.002\";\"5\";\"7\"");
+        Assert.assertEquals(split[4], "\"one\";\"artifactId:goal1\";\"0.003\";\"6\";\"9\"");
         Assert.assertEquals(split.length, 5);
     }
 
